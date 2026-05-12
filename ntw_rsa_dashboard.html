@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NTW RSA — Přehled benefitů CZ × SK</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/dist/tabler-icons.min.css">
+<style>
+:root {
+  --bg: #fafaf7;
+  --surface: #ffffff;
+  --surface-2: #f3f1eb;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.18);
+  --text: #1a1a18;
+  --text-secondary: #5f5e5a;
+  --text-tertiary: #888780;
+  --cz: #185fa5;
+  --cz-bg: #E6F1FB;
+  --cz-strong: #378ADD;
+  --sk: #854F0B;
+  --sk-bg: #FAEEDA;
+  --sk-strong: #EF9F27;
+  --amber: #BA7517;
+  --amber-bg: #FAEEDA;
+  --amber-border: #EF9F27;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  background: var(--bg); color: var(--text);
+  padding: 28px 20px 60px; line-height: 1.5; font-size: 14px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+header { margin-bottom: 24px; }
+.eyebrow { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px; font-weight: 500; }
+h1 { font-size: 26px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.3px; }
+.subtitle { font-size: 14px; color: var(--text-secondary); margin: 0; }
+
+.drop-zone { display: block; border: 2px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 72px 32px; text-align: center; background: var(--surface); transition: all 0.2s; cursor: pointer; }
+.drop-zone:hover { background: #fcfcfa; }
+.drop-zone.dragover { border-color: var(--cz); background: var(--cz-bg); }
+.drop-zone .drop-icon { font-size: 44px; color: var(--text-tertiary); margin-bottom: 14px; line-height: 1; }
+.drop-zone .drop-title { font-size: 17px; font-weight: 500; margin: 0 0 6px; }
+.drop-zone .drop-hint { font-size: 13px; color: var(--text-secondary); margin: 0; }
+.drop-zone input[type=file] { display: none; }
+
+.loading { text-align: center; padding: 80px 20px; }
+.spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--cz); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { color: var(--text-secondary); margin: 0; }
+
+.file-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: var(--surface-2); border-radius: var(--radius); margin-bottom: 16px; font-size: 13px; gap: 12px; flex-wrap: wrap; }
+.file-bar .left { display: flex; align-items: center; gap: 10px; color: var(--text-secondary); min-width: 0; }
+.file-bar .file-name { font-weight: 500; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-reset { background: var(--surface); border: 1px solid var(--border-strong); padding: 7px 14px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--text); font-family: inherit; }
+.btn-reset:hover { background: #fff; border-color: var(--text-secondary); }
+
+.export-wrap { position: relative; display: inline-block; }
+.btn-export { background: var(--surface); border: 1px solid var(--border-strong); padding: 7px 14px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--text); font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
+.btn-export:hover { background: #fff; border-color: var(--text-secondary); }
+.btn-export .caret { font-size: 10px; color: var(--text-tertiary); margin-left: 2px; }
+.export-menu {
+  position: absolute; top: calc(100% + 4px); right: 0;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--radius); box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  min-width: 280px; z-index: 100; padding: 6px;
+  display: flex; flex-direction: column; gap: 1px;
+}
+.export-menu[hidden] { display: none; }
+.export-menu button {
+  background: transparent; border: 0; padding: 9px 11px;
+  border-radius: var(--radius); cursor: pointer; font-size: 13px;
+  text-align: left; display: flex; align-items: center; gap: 10px;
+  color: var(--text); font-family: inherit; width: 100%;
+}
+.export-menu button:hover { background: var(--surface-2); }
+.export-menu button i { font-size: 17px; color: var(--text-secondary); width: 20px; }
+.export-menu .menu-sub { font-size: 11px; color: var(--text-tertiary); margin-left: 8px; }
+.export-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: white; padding: 10px 18px; border-radius: var(--radius);
+  font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.18); z-index: 200;
+  opacity: 0; transition: opacity 0.2s;
+}
+.export-toast.show { opacity: 1; }
+
+@media print {
+  body { padding: 0; background: white; }
+  .container { max-width: 100%; }
+  .file-bar, .filters, footer.legal, .dup-banner { display: none !important; }
+  header { margin-bottom: 12px; }
+  .charts-section, .companies-section, .yoy-section, .benefit-section { break-inside: avoid; page-break-inside: avoid; }
+  .country-card, .hero-card { break-inside: avoid; }
+  .chart-card { break-inside: avoid; }
+  .companies-section .show-more-btn, .companies-section .search-input, .country-filter-btn { display: none !important; }
+}
+
+.dup-banner { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; }
+.dup-banner .icon { color: var(--amber); font-size: 22px; line-height: 1; }
+.dup-banner .content { flex: 1; font-size: 13px; color: var(--text); }
+.dup-banner strong { font-weight: 500; }
+.dup-banner details { margin-top: 6px; }
+.dup-banner summary { cursor: pointer; color: var(--amber); font-size: 12px; font-weight: 500; }
+.dup-list { max-height: 200px; overflow: auto; margin-top: 10px; padding: 10px 12px; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 4px 14px; }
+
+.filters { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 4px 0; margin-bottom: 22px; }
+.filter-group { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.filter-group:last-child { border-bottom: 0; }
+.filter-group-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filter-label { font-size: 11px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.8px; min-width: 110px; flex-shrink: 0; }
+.preset-btn { background: var(--surface); border: 1px solid var(--border-strong); padding: 6px 12px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--text); font-family: inherit; transition: all 0.15s; }
+.preset-btn:hover { background: var(--surface-2); }
+.preset-btn.active { background: var(--text); color: white; border-color: var(--text); }
+.preset-btn .count { color: var(--text-tertiary); font-size: 12px; margin-left: 4px; }
+.preset-btn.active .count { color: rgba(255,255,255,0.65); }
+
+details.subfilter { margin-top: 12px; }
+details.subfilter summary { cursor: pointer; font-size: 13px; color: var(--text-secondary); }
+details.subfilter summary:hover { color: var(--text); }
+details.subfilter[open] summary { margin-bottom: 8px; }
+.vt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 4px 16px; }
+.vt-grid label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; padding: 3px 0; }
+.vt-grid label .vt-count { color: var(--text-tertiary); font-size: 12px; margin-left: auto; }
+
+.month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); gap: 6px; margin-top: 8px; }
+.month-chip { text-align: center; padding: 6px 4px; border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; font-size: 12px; background: var(--surface); user-select: none; }
+.month-chip:hover { background: var(--surface-2); }
+.month-chip.checked { background: var(--cz); color: white; border-color: var(--cz); }
+.month-chip .mc-count { display: block; font-size: 10px; color: var(--text-tertiary); margin-top: 1px; }
+.month-chip.checked .mc-count { color: rgba(255,255,255,0.75); }
+
+.status-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.status-chip {
+  padding: 6px 11px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+  cursor: pointer; font-size: 13px; background: var(--surface); user-select: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.status-chip:hover { background: var(--surface-2); }
+.status-chip.checked { background: var(--cz); color: white; border-color: var(--cz); }
+.status-chip .sc-count { font-size: 11px; color: var(--text-tertiary); }
+.status-chip.checked .sc-count { color: rgba(255,255,255,0.75); }
+
+.hero { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 26px; }
+.hero-card { border-radius: var(--radius); padding: 18px 22px; }
+.hero-card.cz { background: var(--cz-bg); }
+.hero-card.sk { background: var(--sk-bg); }
+.hero-card .label { font-size: 12px; font-weight: 500; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
+.hero-card.cz .label { color: var(--cz); }
+.hero-card.sk .label { color: var(--sk); }
+.hero-card .value { font-size: 28px; font-weight: 500; margin: 0; }
+.hero-card.cz .value { color: var(--cz); }
+.hero-card.sk .value { color: var(--sk); }
+.hero-card .sub { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0; }
+
+.benefit-section { margin-bottom: 26px; }
+.benefit-section h3 { font-size: 16px; font-weight: 500; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+.benefit-section h3 i { font-size: 20px; color: var(--text-secondary); }
+.benefit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.country-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; position: relative; }
+.country-card.cz { border-top: 3px solid var(--cz-strong); }
+.country-card.sk { border-top: 3px solid var(--sk-strong); }
+.country-card .country-label { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; margin: 0 0 14px; }
+.country-card.cz .country-label { color: var(--cz); }
+.country-card.sk .country-label { color: var(--sk); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+.stat .stat-label { font-size: 11px; color: var(--text-secondary); margin: 0 0 3px; text-transform: uppercase; letter-spacing: 0.4px; }
+.stat .stat-value { font-size: 18px; font-weight: 500; margin: 0; }
+.stat.highlight { grid-column: span 2; background: var(--surface-2); border-radius: var(--radius); padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.stat.highlight .stat-label { margin: 0; }
+.stat.highlight .stat-value { font-size: 22px; }
+.country-card.cz .stat.highlight { background: var(--cz-bg); }
+.country-card.cz .stat.highlight .stat-label, .country-card.cz .stat.highlight .stat-value { color: var(--cz); }
+.country-card.sk .stat.highlight { background: var(--sk-bg); }
+.country-card.sk .stat.highlight .stat-label, .country-card.sk .stat.highlight .stat-value { color: var(--sk); }
+
+.charts-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-top: 6px; }
+.charts-title { font-size: 15px; font-weight: 500; margin: 0 0 14px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.chart-card .chart-title { font-size: 12px; color: var(--text-secondary); font-weight: 500; margin: 0 0 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.chart-wrap { position: relative; width: 100%; height: 220px; }
+.chart-wrap.tall { height: 260px; }
+.chart-card.full { grid-column: 1 / -1; margin-top: 16px; }
+.legend { display: flex; gap: 18px; justify-content: center; margin-top: 12px; font-size: 12px; color: var(--text-secondary); }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+.companies-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-top: 24px; }
+
+.yoy-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 20px; margin-top: 24px; }
+.yoy-header { margin-bottom: 14px; }
+.yoy-header .charts-title { margin: 0; }
+.yoy-period { font-size: 12px; color: var(--text-secondary); margin: 4px 0 0; }
+.yoy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.yoy-card { border-radius: var(--radius); padding: 14px 16px; }
+.yoy-card.cz { background: var(--cz-bg); }
+.yoy-card.sk { background: var(--sk-bg); }
+.yoy-card .country-label { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; margin: 0 0 10px; }
+.yoy-card.cz .country-label { color: var(--cz); }
+.yoy-card.sk .country-label { color: var(--sk); }
+.yoy-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.yoy-table th { text-align: left; padding: 6px 4px; font-weight: 500; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+.yoy-table th.right { text-align: right; }
+.yoy-table td { padding: 7px 4px; border-bottom: 1px solid rgba(0,0,0,0.06); font-variant-numeric: tabular-nums; }
+.yoy-table td.right { text-align: right; }
+.yoy-table tr:last-child td { border-bottom: 0; }
+.yoy-table tr.divider td { font-weight: 500; padding-top: 14px; padding-bottom: 4px; border-bottom: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+.yoy-card.cz .yoy-table tr.divider td { color: var(--cz); }
+.yoy-card.sk .yoy-table tr.divider td { color: var(--sk); }
+.delta { font-size: 12px; padding: 2px 7px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
+.delta.pos { background: #E1F5EE; color: #0F6E56; }
+.delta.neg { background: #FCEBEB; color: #791F1F; }
+.delta.zero { background: rgba(0,0,0,0.05); color: var(--text-secondary); }
+.delta.na { color: var(--text-tertiary); }
+.yoy-empty { text-align: center; padding: 24px; color: var(--text-secondary); font-size: 13px; }.companies-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+.companies-title { font-size: 15px; font-weight: 500; margin: 0; display: flex; align-items: center; gap: 8px; }
+.companies-title i { color: var(--text-secondary); font-size: 18px; }
+.companies-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.search-input { padding: 7px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 13px; font-family: inherit; min-width: 200px; background: var(--surface); }
+.search-input:focus { outline: none; border-color: var(--cz); }
+.country-filter-btn { padding: 6px 12px; border: 1px solid var(--border-strong); border-radius: var(--radius); cursor: pointer; font-size: 12px; background: var(--surface); font-family: inherit; color: var(--text); }
+.country-filter-btn.active { background: var(--text); color: white; border-color: var(--text); }
+.table-wrap { overflow-x: auto; }
+.companies-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 760px; }
+.companies-table th { text-align: left; padding: 10px 8px; font-weight: 500; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border-strong); cursor: pointer; user-select: none; white-space: nowrap; }
+.companies-table th.right { text-align: right; }
+.companies-table th:hover { color: var(--text); }
+.companies-table th .sort-ind { color: var(--text-tertiary); margin-left: 4px; font-size: 10px; }
+.companies-table th.sorted { color: var(--text); }
+.companies-table td { padding: 9px 8px; border-bottom: 1px solid var(--border); }
+.companies-table td.right { text-align: right; font-variant-numeric: tabular-nums; }
+.companies-table tbody tr:hover { background: var(--surface-2); }
+.companies-table td.name { font-weight: 500; max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.country-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+.country-pill.cz { background: var(--cz-bg); color: var(--cz); }
+.country-pill.sk { background: var(--sk-bg); color: var(--sk); }
+.companies-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 12px; color: var(--text-secondary); }
+.show-more-btn { background: var(--surface); border: 1px solid var(--border-strong); padding: 6px 14px; border-radius: var(--radius); cursor: pointer; font-size: 12px; font-family: inherit; color: var(--text); }
+.show-more-btn:hover { background: var(--surface-2); }
+
+footer.legal { margin-top: 24px; font-size: 12px; color: var(--text-tertiary); line-height: 1.6; padding: 0 4px; }
+
+@media (max-width: 760px) {
+  .hero, .benefit-grid, .charts-grid, .yoy-grid { grid-template-columns: 1fr; }
+  .filter-label { min-width: auto; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <p class="eyebrow">NTW RSA — kompletní data</p>
+    <h1>Přehled benefitů CZ × SK</h1>
+    <p class="subtitle">Domácí případy (Provider Country = Event Country). Náhrada vychází z „Paid amount for the benefit – Compensation".</p>
+  </header>
+
+  <div id="upload-section">
+    <label class="drop-zone" id="drop-zone" for="file-input">
+      <div class="drop-icon"><i class="ti ti-file-spreadsheet"></i></div>
+      <p class="drop-title">Přetáhněte Excel sem nebo klikněte pro výběr</p>
+      <p class="drop-hint">Vše běží lokálně v prohlížeči. Soubor nikam neodchází.</p>
+      <input type="file" id="file-input" accept=".xlsx,.xls">
+    </label>
+  </div>
+
+  <div id="loading-section" hidden>
+    <div class="loading">
+      <div class="spinner"></div>
+      <p id="loading-text">Načítám a zpracovávám data…</p>
+    </div>
+  </div>
+
+  <div id="dashboard-section" hidden>
+    <div class="file-bar">
+      <div class="left">
+        <i class="ti ti-file-spreadsheet" style="font-size:18px;"></i>
+        <span class="file-name" id="file-name"></span>
+        <span id="row-count" style="color: var(--text-tertiary);"></span>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <div class="export-wrap">
+          <button class="btn-export" id="btn-export"><i class="ti ti-download"></i> Export <span class="caret">▾</span></button>
+          <div class="export-menu" id="export-menu" hidden>
+            <button data-export="data-xlsx"><i class="ti ti-table"></i> <span>Filtrovaná data<span class="menu-sub">(XLSX)</span></span></button>
+            <button data-export="pretty-xlsx"><i class="ti ti-presentation-analytics"></i> <span>Vizuální report<span class="menu-sub">(XLSX s grafy a styly)</span></span></button>
+            <button data-export="report-xlsx"><i class="ti ti-report"></i> <span>Souhrnný report<span class="menu-sub">(XLSX, raw data)</span></span></button>
+            <button data-export="charts-zip"><i class="ti ti-photo"></i> <span>Všechny grafy<span class="menu-sub">(ZIP s PNG)</span></span></button>
+            <button data-export="print"><i class="ti ti-printer"></i> <span>Tisk / uložit jako PDF<span class="menu-sub">(přes prohlížeč)</span></span></button>
+          </div>
+        </div>
+        <button class="btn-reset" id="btn-reset"><i class="ti ti-refresh" style="vertical-align: -2px;"></i> Nahrát jiný soubor</button>
+      </div>
+    </div>
+
+    <div id="dup-banner-wrap"></div>
+
+    <div class="filters">
+      <div class="filter-group">
+        <div class="filter-group-header">
+          <span class="filter-label">Zdroj nákladů</span>
+          <button class="preset-btn" data-cs-preset="estimated">Estimated (Benefit cost estimated)</button>
+          <button class="preset-btn" data-cs-preset="paid">Paid (Compensation)</button>
+          <span style="font-size: 12px; color: var(--text-tertiary); margin-left: auto;" id="cost-source-note"></span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-header">
+          <span class="filter-label">Vehicle Type</span>
+          <button class="preset-btn" data-vt-preset="all">Vše <span class="count" id="vt-cnt-all"></span></button>
+          <button class="preset-btn" data-vt-preset="standard">Osobní (Standard) <span class="count" id="vt-cnt-standard"></span></button>
+          <button class="preset-btn" data-vt-preset="heavy">Těžká (Heavy) <span class="count" id="vt-cnt-heavy"></span></button>
+          <button class="preset-btn" data-vt-preset="other">Ostatní <span class="count" id="vt-cnt-other"></span></button>
+        </div>
+        <details class="subfilter">
+          <summary>Upravit ručně po jednotlivých typech…</summary>
+          <div class="vt-grid" id="vt-grid"></div>
+        </details>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-header">
+          <span class="filter-label">Benefit</span>
+          <button class="preset-btn" data-be-preset="all">Vše <span class="count" id="be-cnt-all"></span></button>
+          <button class="preset-btn" data-be-preset="main">Pouze hlavní (Towing + Tech + Repl.) <span class="count" id="be-cnt-main"></span></button>
+          <button class="preset-btn" data-be-preset="none">Žádný</button>
+        </div>
+        <div class="status-chips" id="be-grid"></div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-header">
+          <span class="filter-label">Status</span>
+          <button class="preset-btn" data-st-preset="all">Vše <span class="count" id="st-cnt-all"></span></button>
+          <button class="preset-btn" data-st-preset="exclude-cancelled">Vše kromě Cancelled <span class="count" id="st-cnt-not-cancelled"></span></button>
+          <button class="preset-btn" data-st-preset="only-settled">Pouze Settled <span class="count" id="st-cnt-settled"></span></button>
+          <button class="preset-btn" data-st-preset="none">Žádný</button>
+        </div>
+        <div class="status-chips" id="st-grid"></div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-header">
+          <span class="filter-label">Období</span>
+          <button class="preset-btn" data-tm-preset="all">Vše <span class="count" id="tm-cnt-all"></span></button>
+          <button class="preset-btn" data-tm-preset="2025">Rok 2025 <span class="count" id="tm-cnt-2025"></span></button>
+          <button class="preset-btn" data-tm-preset="2026">Rok 2026 <span class="count" id="tm-cnt-2026"></span></button>
+          <button class="preset-btn" data-tm-preset="none">Žádný</button>
+        </div>
+        <details class="subfilter" open>
+          <summary>Vybrat po měsících (YYYYMM)…</summary>
+          <div class="month-grid" id="month-grid"></div>
+        </details>
+      </div>
+    </div>
+
+    <div id="dashboard-content"></div>
+
+    <footer class="legal" id="legal-footer">
+      Náklad = zvolený zdroj v sekci „Zdroj nákladů". Default „Benefit cost estimated amount" je vyplněn téměř u všech případů, „Paid (Compensation)" pouze u dokončených. Route Distance / Days of rental jsou průměrovány přes případy, kde je metrika vyplněna. Default filtr Status vylučuje „Cancelled".
+    </footer>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+const COL = {
+  id: 'Benefit assignment',
+  pc: 'Provider Country',
+  ec: 'Event Country',
+  benefit: 'Benefit',
+  status: 'Benefit assignment status',
+  vt: 'Vehicle Type',
+  rd: 'Route Distance',
+  days: 'Days of car rental',
+  estimatedCost: 'Benefit cost estimated amount',
+  paidCompensation: 'Paid amount for the benefit - Compensation',
+  year: 'Assignment creation year',
+  month: 'Assignment creation month',
+  company: 'Provider Service provider company name'
+};
+const COST_SOURCES = {
+  estimated: { col: 'Benefit cost estimated amount', label: 'Benefit cost estimated amount', short: 'Estimated' },
+  paid: { col: 'Paid amount for the benefit - Compensation', label: 'Paid amount – Compensation', short: 'Paid (Compensation)' }
+};
+let activeCostKey = 'estimated';
+function activeCostCol() { return COST_SOURCES[activeCostKey].col; }
+const BENEFITS = {
+  towing: ['Towing/Recovery'],
+  tech: ['Technician attendance'],
+  combined: ['Towing/Recovery', 'Technician attendance'],
+  replacement: ['Replacement vehicle']
+};
+const CZ_MONTHS = ['Led','Úno','Bře','Dub','Kvě','Čer','Čvc','Srp','Zář','Říj','Lis','Pro'];
+
+let data = [];
+let duplicateIds = [];
+let vehicleTypes = [], vehicleTypeCounts = {}, selectedVT = new Set();
+let benefitsList = [], benefitCounts = {}, selectedBE = new Set();
+let statuses = [], statusCounts = {}, selectedST = new Set();
+let months = [], monthCounts = {}, selectedMO = new Set();
+
+let companySearch = '';
+let companySort = { col: 'cases', dir: 'desc' };
+let companyCountryFilter = 'all';
+let companyShowAll = false;
+
+let charts = {};
+
+// ---------- Upload ----------
+const dropZone = $('#drop-zone');
+const fileInput = $('#file-input');
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault(); dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => { if (e.target.files.length) handleFile(e.target.files[0]); });
+$('#btn-reset').addEventListener('click', resetApp);
+
+function resetApp() {
+  data = []; duplicateIds = [];
+  vehicleTypes = []; benefitsList = []; statuses = []; months = [];
+  selectedVT.clear(); selectedBE.clear(); selectedST.clear(); selectedMO.clear();
+  destroyCharts();
+  $('#dashboard-section').hidden = true;
+  $('#upload-section').hidden = false;
+  fileInput.value = '';
+}
+
+function handleFile(file) {
+  $('#upload-section').hidden = true;
+  $('#loading-section').hidden = false;
+  $('#loading-text').textContent = 'Načítám soubor…';
+  setTimeout(() => parseFile(file), 30);
+}
+
+function parseFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      $('#loading-text').textContent = 'Zpracovávám data…';
+      setTimeout(() => {
+        const u8 = new Uint8Array(e.target.result);
+        const wb = XLSX.read(u8, { type: 'array' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: null });
+
+        let hIdx = -1;
+        for (let i = 0; i < Math.min(15, rows.length); i++) {
+          if ((rows[i] || []).some(c => String(c ?? '').trim() === COL.pc)) { hIdx = i; break; }
+        }
+        if (hIdx < 0) throw new Error('Hlavička s "Provider Country" nebyla nalezena.');
+
+        const header = rows[hIdx].map(h => String(h ?? '').trim());
+        const all = [];
+        for (let i = hIdx + 1; i < rows.length; i++) {
+          const r = rows[i];
+          if (!r || r.every(c => c == null || c === '')) continue;
+          const obj = {};
+          for (let j = 0; j < header.length; j++) obj[header[j]] = r[j];
+          const pc = obj[COL.pc], ec = obj[COL.ec];
+          if ((pc === 'Czech Republic' && ec === 'Czech Republic') ||
+              (pc === 'Slovakia' && ec === 'Slovakia')) {
+            all.push(obj);
+          }
+        }
+        data = all;
+
+        // Duplicate detection
+        const idCount = {};
+        for (const r of data) {
+          const id = r[COL.id];
+          if (id == null || id === '') continue;
+          const k = String(id);
+          idCount[k] = (idCount[k] || 0) + 1;
+        }
+        duplicateIds = Object.entries(idCount).filter(([, c]) => c > 1).map(([id, c]) => ({ id, count: c }));
+
+        // Build filter dimensions
+        vehicleTypeCounts = {}; benefitCounts = {}; statusCounts = {}; monthCounts = {};
+        for (const r of data) {
+          let t = r[COL.vt]; t = (t == null || String(t).trim() === '') ? '(neuvedeno)' : String(t).trim();
+          vehicleTypeCounts[t] = (vehicleTypeCounts[t] || 0) + 1;
+          let bf = r[COL.benefit]; bf = (bf == null || String(bf).trim() === '') ? '(neuvedeno)' : String(bf).trim();
+          benefitCounts[bf] = (benefitCounts[bf] || 0) + 1;
+          let s = r[COL.status]; s = (s == null || String(s).trim() === '') ? '(neuvedeno)' : String(s).trim();
+          statusCounts[s] = (statusCounts[s] || 0) + 1;
+          let m = r[COL.month]; m = (m == null || String(m).trim() === '') ? '(neuvedeno)' : String(m).trim();
+          monthCounts[m] = (monthCounts[m] || 0) + 1;
+        }
+        vehicleTypes = Object.keys(vehicleTypeCounts).sort((a, b) => vehicleTypeCounts[b] - vehicleTypeCounts[a]);
+        benefitsList = Object.keys(benefitCounts).sort((a, b) => benefitCounts[b] - benefitCounts[a]);
+        statuses = Object.keys(statusCounts).sort((a, b) => statusCounts[b] - statusCounts[a]);
+        months = Object.keys(monthCounts).filter(m => m !== '(neuvedeno)').sort();
+        if (monthCounts['(neuvedeno)']) months.push('(neuvedeno)');
+
+        selectedVT = new Set(vehicleTypes);
+        selectedBE = new Set(benefitsList);
+        selectedST = new Set(statuses.filter(s => s !== 'Cancelled'));
+        selectedMO = new Set(months);
+
+        $('#file-name').textContent = file.name;
+        $('#row-count').textContent = `· ${fmt(data.length)} domácích případů (CZ→CZ + SK→SK)`;
+
+        buildVTFilter(); buildBEFilter(); buildSTFilter(); buildMOFilter();
+        updateAllPresetCounts(); updateAllPresetActiveStates();
+        updateCostSourceUI();
+        renderDupBanner();
+
+        $('#loading-section').hidden = true;
+        $('#dashboard-section').hidden = false;
+        renderDashboard();
+      }, 30);
+    } catch (err) {
+      console.error(err);
+      alert('Chyba při načítání souboru:\n' + err.message);
+      $('#loading-section').hidden = true;
+      $('#upload-section').hidden = false;
+    }
+  };
+  reader.onerror = () => {
+    alert('Nepodařilo se přečíst soubor.');
+    $('#loading-section').hidden = true;
+    $('#upload-section').hidden = false;
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ---------- Duplicate banner ----------
+function renderDupBanner() {
+  const wrap = $('#dup-banner-wrap');
+  if (!duplicateIds.length) { wrap.innerHTML = ''; return; }
+  const totalRows = duplicateIds.reduce((a, x) => a + x.count, 0);
+  const sample = duplicateIds.slice(0, 500);
+  const ids = sample.map(x => `<span>${escapeHtml(x.id)}${x.count > 2 ? ` ×${x.count}` : ''}</span>`).join('');
+  const more = duplicateIds.length > 500 ? `<p style="margin: 8px 0 0; font-size: 11px; color: var(--text-tertiary);">Zobrazeno prvních 500 z ${fmt(duplicateIds.length)}.</p>` : '';
+  wrap.innerHTML = `
+    <div class="dup-banner">
+      <i class="ti ti-alert-triangle icon"></i>
+      <div class="content">
+        <strong>Nalezeno ${fmt(duplicateIds.length)} duplicitních ID</strong> v sloupci „Benefit assignment" (${fmt(totalRows)} řádků celkem). Benefit assignment by mělo být unikátní — doporučuji ověřit zdrojový export.
+        <details>
+          <summary>Zobrazit duplicitní ID</summary>
+          <div class="dup-list">${ids}</div>
+          ${more}
+        </details>
+      </div>
+    </div>`;
+}
+
+// ---------- Vehicle Type filter ----------
+function isStandard(t) { return /standard|^vehicle\s*<\s*3\.5|^oversized/i.test(t); }
+function isHeavy(t) { return /^heavy/i.test(t); }
+function isVTOther(t) { return !isStandard(t) && !isHeavy(t); }
+
+function buildVTFilter() {
+  const grid = $('#vt-grid');
+  grid.innerHTML = '';
+  for (const t of vehicleTypes) {
+    const lbl = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = selectedVT.has(t); cb.dataset.type = t;
+    cb.addEventListener('change', () => {
+      if (cb.checked) selectedVT.add(t); else selectedVT.delete(t);
+      updateAllPresetActiveStates(); renderDashboard();
+    });
+    const span = document.createElement('span'); span.textContent = t;
+    const cnt = document.createElement('span'); cnt.className = 'vt-count'; cnt.textContent = fmt(vehicleTypeCounts[t]);
+    lbl.append(cb, span, cnt); grid.appendChild(lbl);
+  }
+}
+
+function applyVTPreset(preset) {
+  selectedVT.clear();
+  let pred = () => true;
+  if (preset === 'standard') pred = isStandard;
+  else if (preset === 'heavy') pred = isHeavy;
+  else if (preset === 'other') pred = isVTOther;
+  for (const t of vehicleTypes) if (pred(t)) selectedVT.add(t);
+  $$('#vt-grid input').forEach(cb => cb.checked = selectedVT.has(cb.dataset.type));
+  updateAllPresetActiveStates(); renderDashboard();
+}
+
+// ---------- Status filter ----------
+function buildSTFilter() {
+  const grid = $('#st-grid');
+  grid.innerHTML = '';
+  for (const s of statuses) {
+    const chip = document.createElement('div');
+    chip.className = 'status-chip' + (selectedST.has(s) ? ' checked' : '');
+    chip.dataset.status = s;
+    chip.innerHTML = `<span>${escapeHtml(s)}</span><span class="sc-count">${fmt(statusCounts[s])}</span>`;
+    chip.addEventListener('click', () => {
+      if (selectedST.has(s)) selectedST.delete(s); else selectedST.add(s);
+      chip.classList.toggle('checked');
+      updateAllPresetActiveStates(); renderDashboard();
+    });
+    grid.appendChild(chip);
+  }
+}
+
+function applySTPreset(preset) {
+  selectedST.clear();
+  if (preset === 'all') for (const s of statuses) selectedST.add(s);
+  else if (preset === 'exclude-cancelled') for (const s of statuses) if (s !== 'Cancelled') selectedST.add(s);
+  else if (preset === 'only-settled') { if (statusCounts['Settled']) selectedST.add('Settled'); }
+  $$('#st-grid .status-chip').forEach(ch => ch.classList.toggle('checked', selectedST.has(ch.dataset.status)));
+  updateAllPresetActiveStates(); renderDashboard();
+}
+
+// ---------- Benefit filter ----------
+const MAIN_BENEFITS = ['Towing/Recovery', 'Technician attendance', 'Replacement vehicle'];
+
+function buildBEFilter() {
+  const grid = $('#be-grid');
+  grid.innerHTML = '';
+  for (const b of benefitsList) {
+    const chip = document.createElement('div');
+    chip.className = 'status-chip' + (selectedBE.has(b) ? ' checked' : '');
+    chip.dataset.benefit = b;
+    chip.innerHTML = `<span>${escapeHtml(b)}</span><span class="sc-count">${fmt(benefitCounts[b])}</span>`;
+    chip.addEventListener('click', () => {
+      if (selectedBE.has(b)) selectedBE.delete(b); else selectedBE.add(b);
+      chip.classList.toggle('checked');
+      updateAllPresetActiveStates(); renderDashboard();
+    });
+    grid.appendChild(chip);
+  }
+}
+
+function applyBEPreset(preset) {
+  selectedBE.clear();
+  if (preset === 'all') for (const b of benefitsList) selectedBE.add(b);
+  else if (preset === 'main') for (const b of benefitsList) if (MAIN_BENEFITS.includes(b)) selectedBE.add(b);
+  $$('#be-grid .status-chip').forEach(ch => ch.classList.toggle('checked', selectedBE.has(ch.dataset.benefit)));
+  updateAllPresetActiveStates(); renderDashboard();
+}
+
+// ---------- Time / Month filter ----------
+function yearOfMonth(m) { return m.length >= 4 ? m.substring(0, 4) : ''; }
+
+function buildMOFilter() {
+  const grid = $('#month-grid');
+  grid.innerHTML = '';
+  for (const m of months) {
+    const chip = document.createElement('div');
+    chip.className = 'month-chip' + (selectedMO.has(m) ? ' checked' : '');
+    chip.dataset.month = m;
+    const label = (m === '(neuvedeno)') ? '(neuvedeno)' : formatMonthLabel(m);
+    chip.innerHTML = `<div>${label}</div><span class="mc-count">${fmt(monthCounts[m])}</span>`;
+    chip.addEventListener('click', () => {
+      if (selectedMO.has(m)) selectedMO.delete(m); else selectedMO.add(m);
+      chip.classList.toggle('checked');
+      updateAllPresetActiveStates(); renderDashboard();
+    });
+    grid.appendChild(chip);
+  }
+}
+
+function formatMonthLabel(yyyymm) {
+  if (yyyymm.length !== 6) return yyyymm;
+  const y = yyyymm.substring(2, 4);
+  const m = parseInt(yyyymm.substring(4, 6), 10);
+  return `${CZ_MONTHS[m-1] || yyyymm} ${y}`;
+}
+
+function applyTMPreset(preset) {
+  selectedMO.clear();
+  if (preset === 'all') for (const m of months) selectedMO.add(m);
+  else if (preset === '2025' || preset === '2026') {
+    for (const m of months) if (yearOfMonth(m) === preset) selectedMO.add(m);
+  }
+  $$('#month-grid .month-chip').forEach(ch => ch.classList.toggle('checked', selectedMO.has(ch.dataset.month)));
+  updateAllPresetActiveStates(); renderDashboard();
+}
+
+// ---------- Preset updates ----------
+function updateAllPresetCounts() {
+  const sum = (obj, pred) => Object.keys(obj).filter(pred).reduce((a, k) => a + obj[k], 0);
+  $('#vt-cnt-all').textContent = fmt(data.length);
+  $('#vt-cnt-standard').textContent = fmt(sum(vehicleTypeCounts, isStandard));
+  $('#vt-cnt-heavy').textContent = fmt(sum(vehicleTypeCounts, isHeavy));
+  $('#vt-cnt-other').textContent = fmt(sum(vehicleTypeCounts, isVTOther));
+
+  $('#st-cnt-all').textContent = fmt(data.length);
+  $('#st-cnt-not-cancelled').textContent = fmt(sum(statusCounts, s => s !== 'Cancelled'));
+  $('#st-cnt-settled').textContent = fmt(statusCounts['Settled'] || 0);
+
+  $('#be-cnt-all').textContent = fmt(data.length);
+  $('#be-cnt-main').textContent = fmt(sum(benefitCounts, b => MAIN_BENEFITS.includes(b)));
+
+  $('#tm-cnt-all').textContent = fmt(data.length);
+  $('#tm-cnt-2025').textContent = fmt(sum(monthCounts, m => yearOfMonth(m) === '2025'));
+  $('#tm-cnt-2026').textContent = fmt(sum(monthCounts, m => yearOfMonth(m) === '2026'));
+}
+
+function updateAllPresetActiveStates() {
+  const sigOf = (set) => [...set].sort().join('|');
+  const vtSig = sigOf(selectedVT);
+  const matchSet = (sig, arr) => sig === arr.sort().join('|');
+  let vtA = null;
+  if (matchSet(vtSig, vehicleTypes.slice())) vtA = 'all';
+  else if (matchSet(vtSig, vehicleTypes.filter(isStandard))) vtA = 'standard';
+  else if (matchSet(vtSig, vehicleTypes.filter(isHeavy))) vtA = 'heavy';
+  else if (matchSet(vtSig, vehicleTypes.filter(isVTOther))) vtA = 'other';
+  $$('[data-vt-preset]').forEach(b => b.classList.toggle('active', b.dataset.vtPreset === vtA));
+
+  const stSig = sigOf(selectedST);
+  let stA = null;
+  if (matchSet(stSig, statuses.slice())) stA = 'all';
+  else if (matchSet(stSig, statuses.filter(s => s !== 'Cancelled'))) stA = 'exclude-cancelled';
+  else if (selectedST.size === 1 && selectedST.has('Settled')) stA = 'only-settled';
+  else if (selectedST.size === 0) stA = 'none';
+  $$('[data-st-preset]').forEach(b => b.classList.toggle('active', b.dataset.stPreset === stA));
+
+  const beSig = sigOf(selectedBE);
+  let beA = null;
+  if (matchSet(beSig, benefitsList.slice())) beA = 'all';
+  else if (matchSet(beSig, benefitsList.filter(b => MAIN_BENEFITS.includes(b)))) beA = 'main';
+  else if (selectedBE.size === 0) beA = 'none';
+  $$('[data-be-preset]').forEach(b => b.classList.toggle('active', b.dataset.bePreset === beA));
+
+  const tmSig = sigOf(selectedMO);
+  let tmA = null;
+  if (matchSet(tmSig, months.slice())) tmA = 'all';
+  else if (matchSet(tmSig, months.filter(m => yearOfMonth(m) === '2025'))) tmA = '2025';
+  else if (matchSet(tmSig, months.filter(m => yearOfMonth(m) === '2026'))) tmA = '2026';
+  else if (selectedMO.size === 0) tmA = 'none';
+  $$('[data-tm-preset]').forEach(b => b.classList.toggle('active', b.dataset.tmPreset === tmA));
+}
+
+document.addEventListener('click', (e) => {
+  const cs = e.target.closest('[data-cs-preset]'); if (cs) return applyCSPreset(cs.dataset.csPreset);
+  const v = e.target.closest('[data-vt-preset]'); if (v) return applyVTPreset(v.dataset.vtPreset);
+  const be = e.target.closest('[data-be-preset]'); if (be) return applyBEPreset(be.dataset.bePreset);
+  const s = e.target.closest('[data-st-preset]'); if (s) return applySTPreset(s.dataset.stPreset);
+  const t = e.target.closest('[data-tm-preset]'); if (t) return applyTMPreset(t.dataset.tmPreset);
+});
+
+function applyCSPreset(key) {
+  if (!COST_SOURCES[key]) return;
+  activeCostKey = key;
+  updateCostSourceUI();
+  renderDashboard();
+}
+
+function updateCostSourceUI() {
+  $$('[data-cs-preset]').forEach(b => b.classList.toggle('active', b.dataset.csPreset === activeCostKey));
+  const note = $('#cost-source-note');
+  if (note) {
+    const fillCount = data.reduce((a, r) => a + ((r[activeCostCol()] != null && r[activeCostCol()] !== '') ? 1 : 0), 0);
+    const pct = data.length ? Math.round(100 * fillCount / data.length) : 0;
+    note.textContent = `Vyplněno: ${fmt(fillCount)} z ${fmt(data.length)} (${pct} %)`;
+  }
+}
+
+// ---------- Filtering ----------
+function rowPassesFilters(r) {
+  let t = r[COL.vt]; t = (t == null || String(t).trim() === '') ? '(neuvedeno)' : String(t).trim();
+  if (!selectedVT.has(t)) return false;
+  let b = r[COL.benefit]; b = (b == null || String(b).trim() === '') ? '(neuvedeno)' : String(b).trim();
+  if (!selectedBE.has(b)) return false;
+  let s = r[COL.status]; s = (s == null || String(s).trim() === '') ? '(neuvedeno)' : String(s).trim();
+  if (!selectedST.has(s)) return false;
+  let m = r[COL.month]; m = (m == null || String(m).trim() === '') ? '(neuvedeno)' : String(m).trim();
+  if (!selectedMO.has(m)) return false;
+  return true;
+}
+function getFilteredData() { return data.filter(rowPassesFilters); }
+
+// ---------- Stats ----------
+function computeStats(rows, country, benefits, metric) {
+  const wantPC = country === 'CZ' ? 'Czech Republic' : 'Slovakia';
+  const costCol = activeCostCol();
+  let n = 0, paidSum = 0, paidN = 0, mSum = 0, mN = 0;
+  for (const r of rows) {
+    if (r[COL.pc] !== wantPC) continue;
+    if (!benefits.includes(r[COL.benefit])) continue;
+    n++;
+    const p = r[costCol];
+    if (p != null && p !== '') { const pn = Number(p); if (!isNaN(pn)) { paidSum += pn; paidN++; } }
+    const v = r[metric];
+    if (v != null && v !== '') { const vn = Number(v); if (!isNaN(vn)) { mSum += vn; mN++; } }
+  }
+  return { n, paidSum, paidAvg: paidN ? paidSum / paidN : 0, metricAvg: mN ? mSum / mN : 0, paidN };
+}
+
+function computeCompanies(rows) {
+  const map = new Map();
+  const costCol = activeCostCol();
+  for (const r of rows) {
+    const name = r[COL.company];
+    if (name == null || String(name).trim() === '') continue;
+    const k = String(name).trim();
+    let c = map.get(k);
+    if (!c) {
+      c = { name: k, country: (r[COL.pc] === 'Slovakia' ? 'SK' : 'CZ'), cases: 0,
+            paidSum: 0, paidN: 0, rdSum: 0, rdN: 0, daysSum: 0, daysN: 0,
+            towingN: 0, techN: 0, replN: 0 };
+      map.set(k, c);
+    }
+    c.cases++;
+    const b = r[COL.benefit];
+    if (b === 'Towing/Recovery') c.towingN++;
+    else if (b === 'Technician attendance') c.techN++;
+    else if (b === 'Replacement vehicle') c.replN++;
+    const p = r[costCol];
+    if (p != null && p !== '') { const pn = Number(p); if (!isNaN(pn)) { c.paidSum += pn; c.paidN++; } }
+    if (b === 'Towing/Recovery' || b === 'Technician attendance') {
+      const v = r[COL.rd];
+      if (v != null && v !== '') { const vn = Number(v); if (!isNaN(vn)) { c.rdSum += vn; c.rdN++; } }
+    }
+    if (b === 'Replacement vehicle') {
+      const v = r[COL.days];
+      if (v != null && v !== '') { const vn = Number(v); if (!isNaN(vn)) { c.daysSum += vn; c.daysN++; } }
+    }
+  }
+  return [...map.values()].map(c => ({
+    ...c,
+    paidAvg: c.paidN ? c.paidSum / c.paidN : 0,
+    rdAvg: c.rdN ? c.rdSum / c.rdN : 0,
+    daysAvg: c.daysN ? c.daysSum / c.daysN : 0
+  }));
+}
+
+function visibleMonths() {
+  return [...selectedMO].filter(m => /^\d{6}$/.test(m)).sort();
+}
+
+function computeMonthlyMetrics(rows, monthList) {
+  const buckets = {};
+  const costCol = activeCostCol();
+  const list = monthList || months.filter(m => m !== '(neuvedeno)');
+  for (const m of list) {
+    buckets[m] = {
+      cz: { resPaidS: 0, resPaidN: 0, resRdS: 0, resRdN: 0, rplPaidS: 0, rplPaidN: 0, rplDS: 0, rplDN: 0 },
+      sk: { resPaidS: 0, resPaidN: 0, resRdS: 0, resRdN: 0, rplPaidS: 0, rplPaidN: 0, rplDS: 0, rplDN: 0 }
+    };
+  }
+  for (const r of rows) {
+    const m = String(r[COL.month] || '').trim();
+    if (!buckets[m]) continue;
+    const c = r[COL.pc] === 'Czech Republic' ? 'cz' : (r[COL.pc] === 'Slovakia' ? 'sk' : null);
+    if (!c) continue;
+    const b = r[COL.benefit];
+    const isRescue = (b === 'Towing/Recovery' || b === 'Technician attendance');
+    const isRepl = (b === 'Replacement vehicle');
+    if (!isRescue && !isRepl) continue;
+    const buc = buckets[m][c];
+    const p = r[costCol];
+    const pn = (p != null && p !== '') ? Number(p) : NaN;
+    if (isRescue) {
+      if (!isNaN(pn)) { buc.resPaidS += pn; buc.resPaidN++; }
+      const v = r[COL.rd]; const vn = (v != null && v !== '') ? Number(v) : NaN;
+      if (!isNaN(vn)) { buc.resRdS += vn; buc.resRdN++; }
+    } else {
+      if (!isNaN(pn)) { buc.rplPaidS += pn; buc.rplPaidN++; }
+      const v = r[COL.days]; const vn = (v != null && v !== '') ? Number(v) : NaN;
+      if (!isNaN(vn)) { buc.rplDS += vn; buc.rplDN++; }
+    }
+  }
+  const sorted = Object.keys(buckets).sort();
+  const avg = (s, n) => n ? s / n : null;
+  return {
+    months: sorted,
+    rescueCost: { cz: sorted.map(m => avg(buckets[m].cz.resPaidS, buckets[m].cz.resPaidN)),
+                  sk: sorted.map(m => avg(buckets[m].sk.resPaidS, buckets[m].sk.resPaidN)) },
+    rescueKm:   { cz: sorted.map(m => avg(buckets[m].cz.resRdS, buckets[m].cz.resRdN)),
+                  sk: sorted.map(m => avg(buckets[m].sk.resRdS, buckets[m].sk.resRdN)) },
+    replCost:   { cz: sorted.map(m => avg(buckets[m].cz.rplPaidS, buckets[m].cz.rplPaidN)),
+                  sk: sorted.map(m => avg(buckets[m].sk.rplPaidS, buckets[m].sk.rplPaidN)) },
+    replDays:   { cz: sorted.map(m => avg(buckets[m].cz.rplDS, buckets[m].cz.rplDN)),
+                  sk: sorted.map(m => avg(buckets[m].sk.rplDS, buckets[m].sk.rplDN)) }
+  };
+}
+
+function computeMonthly(rows, monthList) {
+  const list = monthList || months.filter(m => m !== '(neuvedeno)');
+  const map = {};
+  for (const m of list) map[m] = { cz: 0, sk: 0 };
+  for (const r of rows) {
+    const m = r[COL.month] != null ? String(r[COL.month]).trim() : '';
+    if (!map[m]) continue;
+    if (r[COL.pc] === 'Czech Republic') map[m].cz++;
+    else if (r[COL.pc] === 'Slovakia') map[m].sk++;
+  }
+  return Object.keys(map).sort().map(k => ({ month: k, ...map[k] }));
+}
+
+// ---------- Render ----------
+function renderDashboard() {
+  const filtered = getFilteredData();
+  const visMonths = visibleMonths();
+
+  const hasTowing = selectedBE.has('Towing/Recovery');
+  const hasTech = selectedBE.has('Technician attendance');
+  const hasCombined = hasTowing && hasTech;
+  const hasReplacement = selectedBE.has('Replacement vehicle');
+  const hasRescue = hasTowing || hasTech;
+  const flags = { hasTowing, hasTech, hasCombined, hasReplacement, hasRescue };
+
+  const cz = {
+    towing: hasTowing ? computeStats(filtered, 'CZ', BENEFITS.towing, COL.rd) : null,
+    tech: hasTech ? computeStats(filtered, 'CZ', BENEFITS.tech, COL.rd) : null,
+    combined: hasCombined ? computeStats(filtered, 'CZ', BENEFITS.combined, COL.rd) : null,
+    replacement: hasReplacement ? computeStats(filtered, 'CZ', BENEFITS.replacement, COL.days) : null
+  };
+  const sk = {
+    towing: hasTowing ? computeStats(filtered, 'SK', BENEFITS.towing, COL.rd) : null,
+    tech: hasTech ? computeStats(filtered, 'SK', BENEFITS.tech, COL.rd) : null,
+    combined: hasCombined ? computeStats(filtered, 'SK', BENEFITS.combined, COL.rd) : null,
+    replacement: hasReplacement ? computeStats(filtered, 'SK', BENEFITS.replacement, COL.days) : null
+  };
+  const czTotal = (cz.towing?.n || 0) + (cz.tech?.n || 0) + (cz.replacement?.n || 0);
+  const skTotal = (sk.towing?.n || 0) + (sk.tech?.n || 0) + (sk.replacement?.n || 0);
+
+  let benefitsHtml = '';
+  if (hasTowing) benefitsHtml += benefitSection('Towing / Recovery', 'ti-truck', cz.towing, sk.towing, 'rd');
+  if (hasTech) benefitsHtml += benefitSection('Technician attendance', 'ti-tools', cz.tech, sk.tech, 'rd');
+  if (hasCombined) benefitsHtml += benefitSection('Towing + Technician attendance — společně', 'ti-sum', cz.combined, sk.combined, 'rd');
+  if (hasReplacement) benefitsHtml += benefitSection('Replacement vehicle', 'ti-car', cz.replacement, sk.replacement, 'days');
+
+  const noMainSelected = !hasTowing && !hasTech && !hasReplacement;
+  if (noMainSelected) {
+    benefitsHtml = `<div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px 22px; margin-bottom: 24px; color: var(--text-secondary); font-size: 13px;">
+      <i class="ti ti-info-circle" style="vertical-align: -3px; margin-right: 4px;"></i>
+      Žádný z hlavních sledovaných benefitů (Towing, Technician, Replacement) není v aktuálním filtru. Statistiky se omezí na firemní přehled a měsíční vývoj případů — zvolené benefity uvidíš tam.
+    </div>`;
+  }
+
+  // Bar chart cards (Srovnání)
+  const showRdChart = hasRescue && (czTotal + skTotal > 0);
+  const showCostChart = (hasTowing || hasTech || hasReplacement) && (czTotal + skTotal > 0);
+  let cmpCards = '';
+  if (showRdChart) cmpCards += `<div class="chart-card"><p class="chart-title">Ø Route Distance (km)</p><div class="chart-wrap"><canvas id="chart-rd"></canvas></div></div>`;
+  if (showCostChart) cmpCards += `<div class="chart-card"><p class="chart-title">Ø náklady na případ (Kč)</p><div class="chart-wrap"><canvas id="chart-cost"></canvas></div></div>`;
+  cmpCards += `<div class="chart-card full"><p class="chart-title">Vývoj počtu případů po měsících</p><div class="chart-wrap tall"><canvas id="chart-monthly"></canvas></div></div>`;
+  const cmpSectionHtml = `
+    <div class="charts-section">
+      <p class="charts-title">Srovnání klíčových ukazatelů</p>
+      <div class="charts-grid">${cmpCards}</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#185fa5"></span>Česko</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Slovensko</span>
+      </div>
+    </div>`;
+
+  // Trend charts
+  const tdHtml = [];
+  if (hasRescue) tdHtml.push(`<div class="chart-card"><p class="chart-title">Ø náklad / případ — Towing + Technician (Kč)</p><div class="chart-wrap"><canvas id="chart-trend-cost-rescue"></canvas></div></div>`);
+  if (hasRescue) tdHtml.push(`<div class="chart-card"><p class="chart-title">Ø Route Distance — Towing + Technician (km)</p><div class="chart-wrap"><canvas id="chart-trend-km"></canvas></div></div>`);
+  if (hasReplacement) tdHtml.push(`<div class="chart-card"><p class="chart-title">Ø náklad / případ — Replacement vehicle (Kč)</p><div class="chart-wrap"><canvas id="chart-trend-cost-repl"></canvas></div></div>`);
+  if (hasReplacement) tdHtml.push(`<div class="chart-card"><p class="chart-title">Ø dní zápůjčky — Replacement vehicle</p><div class="chart-wrap"><canvas id="chart-trend-days"></canvas></div></div>`);
+  const trendSectionHtml = tdHtml.length ? `
+    <div class="charts-section">
+      <p class="charts-title">Vývoj klíčových ukazatelů v čase</p>
+      <div class="charts-grid">${tdHtml.join('')}</div>
+      <div class="legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#185fa5"></span>Česko</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#EF9F27"></span>Slovensko</span>
+      </div>
+    </div>` : '';
+
+  $('#dashboard-content').innerHTML = `
+    <div class="hero">
+      <div class="hero-card cz">
+        <p class="label"><i class="ti ti-flag"></i> Česko (CZ → CZ)</p>
+        <p class="value">${fmt(czTotal)}</p>
+        <p class="sub">případů ve vybraných hlavních benefitech</p>
+      </div>
+      <div class="hero-card sk">
+        <p class="label"><i class="ti ti-flag"></i> Slovensko (SK → SK)</p>
+        <p class="value">${fmt(skTotal)}</p>
+        <p class="sub">případů ve vybraných hlavních benefitech</p>
+      </div>
+    </div>
+
+    ${benefitsHtml}
+    ${cmpSectionHtml}
+    ${trendSectionHtml}
+
+    <div class="yoy-section" id="yoy-section"></div>
+    <div class="companies-section" id="companies-section"></div>
+  `;
+  drawCharts({ cz, sk, monthly: computeMonthly(filtered, visMonths), monthlyMetrics: computeMonthlyMetrics(filtered, visMonths), flags, showRdChart, showCostChart });
+  renderYoY();
+  renderCompanies(filtered);
+}
+
+function benefitSection(title, icon, czS, skS, metricKey) {
+  return `
+    <div class="benefit-section">
+      <h3><i class="ti ${icon}"></i> ${title}</h3>
+      <div class="benefit-grid">
+        ${countryCard('cz', 'ČESKO', czS, metricKey)}
+        ${countryCard('sk', 'SLOVENSKO', skS, metricKey)}
+      </div>
+    </div>`;
+}
+
+function countryCard(cls, label, s, metricKey) {
+  if (s.n === 0) {
+    return `<div class="country-card ${cls}"><p class="country-label">${label}</p><p style="color: var(--text-tertiary); font-size: 13px; margin: 0;">Žádné případy v aktuálním filtru.</p></div>`;
+  }
+  const metricLabel = metricKey === 'rd' ? 'Ø Route Distance' : 'Ø Dní zápůjčky';
+  const metricValue = metricKey === 'rd' ? `${dec(s.metricAvg, 1)} km` : `${dec(s.metricAvg, 2)} dne`;
+  return `
+    <div class="country-card ${cls}">
+      <p class="country-label">${label}</p>
+      <div class="stats-grid">
+        <div class="stat"><p class="stat-label">Případů</p><p class="stat-value">${fmt(s.n)}</p></div>
+        <div class="stat"><p class="stat-label">Náklady celkem</p><p class="stat-value">${fmtMoneyTotal(s.paidSum)}</p></div>
+        <div class="stat"><p class="stat-label">Ø na případ</p><p class="stat-value">${fmtMoneyAvg(s.paidAvg)}</p></div>
+        <div class="stat"><p class="stat-label">S vyplněnou částkou</p><p class="stat-value">${fmt(s.paidN)}</p></div>
+        <div class="stat highlight">
+          <p class="stat-label">${metricLabel}</p>
+          <p class="stat-value">${metricValue}</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+function drawCharts({ cz, sk, monthly, monthlyMetrics, flags, showRdChart, showCostChart }) {
+  destroyCharts();
+  const baseOpts = {
+    responsive: true, maintainAspectRatio: false,
+    animation: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.06)' }, ticks: { font: { size: 11 } } }
+    }
+  };
+
+  // RD bar chart — only Towing/Tech/Combined relevant
+  if (showRdChart && $('#chart-rd')) {
+    const labels = [], czD = [], skD = [];
+    if (flags.hasTowing)   { labels.push('Towing');     czD.push(r1(cz.towing.metricAvg));    skD.push(r1(sk.towing.metricAvg)); }
+    if (flags.hasTech)     { labels.push('Technician'); czD.push(r1(cz.tech.metricAvg));      skD.push(r1(sk.tech.metricAvg)); }
+    if (flags.hasCombined) { labels.push('Combined');   czD.push(r1(cz.combined.metricAvg)); skD.push(r1(sk.combined.metricAvg)); }
+    if (labels.length) {
+      const o = JSON.parse(JSON.stringify(baseOpts));
+      o.plugins.tooltip = { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${dec(ctx.parsed.y, 1)} km` } };
+      charts.rd = new Chart($('#chart-rd'), {
+        type: 'bar',
+        data: { labels, datasets: [
+          { label: 'CZ', data: czD, backgroundColor: '#185fa5', borderRadius: 4 },
+          { label: 'SK', data: skD, backgroundColor: '#EF9F27', borderRadius: 4 }
+        ]},
+        options: o
+      });
+    }
+  }
+
+  // Cost bar chart — Towing/Tech/Combined/Replacement relevant
+  if (showCostChart && $('#chart-cost')) {
+    const labels = [], czD = [], skD = [];
+    if (flags.hasTowing)      { labels.push('Towing');      czD.push(Math.round(cz.towing.paidAvg));      skD.push(Math.round(sk.towing.paidAvg)); }
+    if (flags.hasTech)        { labels.push('Technician');  czD.push(Math.round(cz.tech.paidAvg));        skD.push(Math.round(sk.tech.paidAvg)); }
+    if (flags.hasCombined)    { labels.push('Combined');    czD.push(Math.round(cz.combined.paidAvg));    skD.push(Math.round(sk.combined.paidAvg)); }
+    if (flags.hasReplacement) { labels.push('Replacement'); czD.push(Math.round(cz.replacement.paidAvg)); skD.push(Math.round(sk.replacement.paidAvg)); }
+    if (labels.length) {
+      const o = JSON.parse(JSON.stringify(baseOpts));
+      o.plugins.tooltip = { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${fmtMoneyAvg(ctx.parsed.y)}` } };
+      charts.cost = new Chart($('#chart-cost'), {
+        type: 'bar',
+        data: { labels, datasets: [
+          { label: 'CZ', data: czD, backgroundColor: '#185fa5', borderRadius: 4 },
+          { label: 'SK', data: skD, backgroundColor: '#EF9F27', borderRadius: 4 }
+        ]},
+        options: o
+      });
+    }
+  }
+
+  // Monthly cases (always shown, but adapts to visible months)
+  if ($('#chart-monthly') && monthly.length) {
+    const moOpts = JSON.parse(JSON.stringify(baseOpts));
+    moOpts.scales.x.ticks = { font: { size: 10 }, maxRotation: 45, minRotation: 45, autoSkip: false };
+    moOpts.plugins.tooltip = { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${fmt(ctx.parsed.y)} případů` } };
+    charts.monthly = new Chart($('#chart-monthly'), {
+      type: 'bar',
+      data: { labels: monthly.map(x => formatMonthLabel(x.month)), datasets: [
+        { label: 'CZ', data: monthly.map(x => x.cz), backgroundColor: '#185fa5', borderRadius: 3 },
+        { label: 'SK', data: monthly.map(x => x.sk), backgroundColor: '#EF9F27', borderRadius: 3 }
+      ]},
+      options: moOpts
+    });
+  }
+
+  // Trend (line) charts — conditional
+  const trendLabels = monthlyMetrics.months.map(formatMonthLabel);
+  const lineDS = (czData, skData) => ([
+    { label: 'CZ', data: czData, borderColor: '#185fa5', backgroundColor: '#185fa5', spanGaps: true, tension: 0.2, borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 5 },
+    { label: 'SK', data: skData, borderColor: '#EF9F27', backgroundColor: '#EF9F27', spanGaps: true, tension: 0.2, borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 5 }
+  ]);
+  const trendBase = () => {
+    const o = JSON.parse(JSON.stringify(baseOpts));
+    o.scales.x.ticks = { font: { size: 10 }, maxRotation: 45, minRotation: 45, autoSkip: false };
+    o.interaction = { mode: 'index', intersect: false };
+    return o;
+  };
+  const moneyTrendOpts = () => { const o = trendBase(); o.plugins.tooltip = { callbacks: { label: (c) => c.parsed.y == null ? `${c.dataset.label}: —` : `${c.dataset.label}: ${fmtMoneyAvg(c.parsed.y)}` } }; return o; };
+  const kmTrendOpts    = () => { const o = trendBase(); o.plugins.tooltip = { callbacks: { label: (c) => c.parsed.y == null ? `${c.dataset.label}: —` : `${c.dataset.label}: ${dec(c.parsed.y, 1)} km` } }; return o; };
+  const daysTrendOpts  = () => { const o = trendBase(); o.plugins.tooltip = { callbacks: { label: (c) => c.parsed.y == null ? `${c.dataset.label}: —` : `${c.dataset.label}: ${dec(c.parsed.y, 2)} dne` } }; return o; };
+
+  if (flags.hasRescue && $('#chart-trend-cost-rescue') && trendLabels.length) {
+    charts.trendCostRescue = new Chart($('#chart-trend-cost-rescue'), {
+      type: 'line',
+      data: { labels: trendLabels, datasets: lineDS(
+        monthlyMetrics.rescueCost.cz.map(v => v == null ? null : Math.round(v)),
+        monthlyMetrics.rescueCost.sk.map(v => v == null ? null : Math.round(v))) },
+      options: moneyTrendOpts()
+    });
+  }
+  if (flags.hasRescue && $('#chart-trend-km') && trendLabels.length) {
+    charts.trendKm = new Chart($('#chart-trend-km'), {
+      type: 'line',
+      data: { labels: trendLabels, datasets: lineDS(
+        monthlyMetrics.rescueKm.cz.map(v => v == null ? null : r1(v)),
+        monthlyMetrics.rescueKm.sk.map(v => v == null ? null : r1(v))) },
+      options: kmTrendOpts()
+    });
+  }
+  if (flags.hasReplacement && $('#chart-trend-cost-repl') && trendLabels.length) {
+    charts.trendCostRepl = new Chart($('#chart-trend-cost-repl'), {
+      type: 'line',
+      data: { labels: trendLabels, datasets: lineDS(
+        monthlyMetrics.replCost.cz.map(v => v == null ? null : Math.round(v)),
+        monthlyMetrics.replCost.sk.map(v => v == null ? null : Math.round(v))) },
+      options: moneyTrendOpts()
+    });
+  }
+  if (flags.hasReplacement && $('#chart-trend-days') && trendLabels.length) {
+    charts.trendDays = new Chart($('#chart-trend-days'), {
+      type: 'line',
+      data: { labels: trendLabels, datasets: lineDS(
+        monthlyMetrics.replDays.cz.map(v => v == null ? null : Math.round(v*100)/100),
+        monthlyMetrics.replDays.sk.map(v => v == null ? null : Math.round(v*100)/100)) },
+      options: daysTrendOpts()
+    });
+  }
+}
+
+function destroyCharts() {
+  for (const k in charts) {
+    if (charts[k]) { charts[k].destroy(); charts[k] = null; }
+  }
+}
+
+// ---------- Companies ----------
+function renderCompanies(filtered) {
+  const all = computeCompanies(filtered);
+  $('#companies-section').innerHTML = `
+    <div class="companies-header">
+      <p class="companies-title"><i class="ti ti-building"></i> Přehled po firmách</p>
+      <div class="companies-tools">
+        <button class="country-filter-btn ${companyCountryFilter==='all'?'active':''}" data-co-filter="all">Vše</button>
+        <button class="country-filter-btn ${companyCountryFilter==='CZ'?'active':''}" data-co-filter="CZ">CZ</button>
+        <button class="country-filter-btn ${companyCountryFilter==='SK'?'active':''}" data-co-filter="SK">SK</button>
+        <input type="text" class="search-input" id="company-search" placeholder="Hledat firmu…" value="${escapeHtml(companySearch)}">
+      </div>
+    </div>
+    <div class="table-wrap" id="company-table-wrap"></div>
+    <div class="companies-footer">
+      <span id="company-counter"></span>
+      <button class="show-more-btn" id="company-show-more"></button>
+    </div>
+  `;
+  $$('[data-co-filter]').forEach(b => b.addEventListener('click', () => {
+    companyCountryFilter = b.dataset.coFilter; companyShowAll = false; renderCompanies(filtered);
+  }));
+  const si = $('#company-search');
+  si.addEventListener('input', () => { companySearch = si.value; renderCompanyTable(all); });
+  $('#company-show-more').addEventListener('click', () => { companyShowAll = !companyShowAll; renderCompanyTable(all); });
+  renderCompanyTable(all);
+}
+
+function renderCompanyTable(all) {
+  let list = all;
+  if (companyCountryFilter !== 'all') list = list.filter(c => c.country === companyCountryFilter);
+  if (companySearch) {
+    const q = companySearch.toLowerCase();
+    list = list.filter(c => c.name.toLowerCase().includes(q));
+  }
+  const dir = companySort.dir === 'asc' ? 1 : -1;
+  const col = companySort.col;
+  list.sort((a, b) => {
+    if (col === 'name') return dir * a.name.localeCompare(b.name, 'cs');
+    return dir * ((a[col] || 0) - (b[col] || 0));
+  });
+
+  const totalCount = list.length;
+  const limit = companyShowAll ? totalCount : Math.min(30, totalCount);
+  const shown = list.slice(0, limit);
+
+  $('#company-counter').textContent = `Zobrazeno ${fmt(shown.length)} z ${fmt(totalCount)} firem`;
+  const moreBtn = $('#company-show-more');
+  if (totalCount > 30) {
+    moreBtn.style.display = '';
+    moreBtn.textContent = companyShowAll ? 'Zobrazit jen top 30' : `Zobrazit všechny (${fmt(totalCount)})`;
+  } else { moreBtn.style.display = 'none'; }
+
+  const ind = (c) => companySort.col === c ? `<span class="sort-ind">${companySort.dir === 'asc' ? '▲' : '▼'}</span>` : '';
+  const cls = (c) => companySort.col === c ? 'sorted' : '';
+  const colHdr = (key, label, right) => `<th class="${right?'right ':''}${cls(key)}" data-sort="${key}">${label}${ind(key)}</th>`;
+
+  const rowsHtml = shown.map(c => `
+    <tr>
+      <td class="name" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</td>
+      <td><span class="country-pill ${c.country.toLowerCase()}">${c.country}</span></td>
+      <td class="right">${fmt(c.cases)}</td>
+      <td class="right">${fmt(c.towingN)}</td>
+      <td class="right">${fmt(c.techN)}</td>
+      <td class="right">${fmt(c.replN)}</td>
+      <td class="right">${fmtMoneyAvg(c.paidAvg)}</td>
+      <td class="right">${c.rdN ? dec(c.rdAvg, 1) + ' km' : '—'}</td>
+      <td class="right">${c.daysN ? dec(c.daysAvg, 2) : '—'}</td>
+    </tr>
+  `).join('');
+
+  $('#company-table-wrap').innerHTML = `
+    <table class="companies-table">
+      <thead><tr>
+        ${colHdr('name', 'Firma', false)}
+        <th>Země</th>
+        ${colHdr('cases', 'Případů', true)}
+        ${colHdr('towingN', 'Towing', true)}
+        ${colHdr('techN', 'Tech', true)}
+        ${colHdr('replN', 'Repl.', true)}
+        ${colHdr('paidAvg', 'Ø Náklad', true)}
+        ${colHdr('rdAvg', 'Ø RD (T+T)', true)}
+        ${colHdr('daysAvg', 'Ø Dní', true)}
+      </tr></thead>
+      <tbody>${rowsHtml || '<tr><td colspan="9" style="text-align: center; color: var(--text-tertiary); padding: 24px;">Žádné firmy.</td></tr>'}</tbody>
+    </table>`;
+
+  $$('.companies-table th[data-sort]').forEach(th => th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    if (companySort.col === k) companySort.dir = (companySort.dir === 'asc' ? 'desc' : 'asc');
+    else { companySort.col = k; companySort.dir = (k === 'name' ? 'asc' : 'desc'); }
+    renderCompanyTable(all);
+  }));
+}
+
+// ---------- Year-to-year ----------
+function computeYoY() {
+  // Apply VT, Benefit and Status filters (ignore time filter)
+  const baseRows = data.filter(r => {
+    let t = r[COL.vt]; t = (t == null || String(t).trim() === '') ? '(neuvedeno)' : String(t).trim();
+    if (!selectedVT.has(t)) return false;
+    let bf = r[COL.benefit]; bf = (bf == null || String(bf).trim() === '') ? '(neuvedeno)' : String(bf).trim();
+    if (!selectedBE.has(bf)) return false;
+    let s = r[COL.status]; s = (s == null || String(s).trim() === '') ? '(neuvedeno)' : String(s).trim();
+    if (!selectedST.has(s)) return false;
+    return true;
+  });
+
+  // Find years and their months
+  const yearMonths = {};
+  for (const r of baseRows) {
+    const m = String(r[COL.month] || '').trim();
+    if (m.length !== 6) continue;
+    const y = m.substring(0, 4);
+    const mm = m.substring(4, 6);
+    if (!yearMonths[y]) yearMonths[y] = new Set();
+    yearMonths[y].add(mm);
+  }
+  const years = Object.keys(yearMonths).sort();
+  if (years.length < 2) return null;
+  const y1 = years[years.length - 2];
+  const y2 = years[years.length - 1];
+
+  const common = [...yearMonths[y1]].filter(mm => yearMonths[y2].has(mm)).sort();
+  if (common.length === 0) return null;
+
+  const set1 = new Set(common.map(mm => y1 + mm));
+  const set2 = new Set(common.map(mm => y2 + mm));
+  const y1Rows = baseRows.filter(r => set1.has(String(r[COL.month] || '').trim()));
+  const y2Rows = baseRows.filter(r => set2.has(String(r[COL.month] || '').trim()));
+
+  const hasTowing = selectedBE.has('Towing/Recovery');
+  const hasTech = selectedBE.has('Technician attendance');
+  const hasReplacement = selectedBE.has('Replacement vehicle');
+  if (!hasTowing && !hasTech && !hasReplacement) return null;
+
+  const mkCountry = (country) => {
+    const out = {};
+    if (hasTowing) out.towing = { y1: computeStats(y1Rows, country, BENEFITS.towing, COL.rd), y2: computeStats(y2Rows, country, BENEFITS.towing, COL.rd) };
+    if (hasTech) out.tech = { y1: computeStats(y1Rows, country, BENEFITS.tech, COL.rd), y2: computeStats(y2Rows, country, BENEFITS.tech, COL.rd) };
+    if (hasReplacement) out.replacement = { y1: computeStats(y1Rows, country, BENEFITS.replacement, COL.days), y2: computeStats(y2Rows, country, BENEFITS.replacement, COL.days) };
+    return out;
+  };
+
+  return { years: [y1, y2], commonMonths: common, cz: mkCountry('CZ'), sk: mkCountry('SK') };
+}
+
+function renderYoY() {
+  const sec = $('#yoy-section');
+  const hasMain = selectedBE.has('Towing/Recovery') || selectedBE.has('Technician attendance') || selectedBE.has('Replacement vehicle');
+  if (!hasMain) {
+    sec.innerHTML = `
+      <div class="yoy-header"><p class="charts-title">Year-to-year porovnání</p></div>
+      <p class="yoy-empty">YoY porovnání pracuje s benefity Towing, Technician a Replacement. Žádný z nich není v aktuálním filtru.</p>`;
+    return;
+  }
+  const yoy = computeYoY();
+  if (!yoy) {
+    sec.innerHTML = `
+      <div class="yoy-header"><p class="charts-title">Year-to-year porovnání</p></div>
+      <p class="yoy-empty">YoY porovnání vyžaduje data minimálně ze dvou let s překrývajícími se měsíci.</p>`;
+    return;
+  }
+  const { years, commonMonths, cz, sk } = yoy;
+  const period = formatYoYPeriod(commonMonths, years);
+  sec.innerHTML = `
+    <div class="yoy-header">
+      <p class="charts-title">Year-to-year porovnání: ${years[0]} → ${years[1]}</p>
+      <p class="yoy-period">Srovnatelné období: ${period}. Bere v úvahu filtry Vehicle Type, Benefit a Status; filtr Období se ignoruje, aby srovnání dávalo smysl.</p>
+    </div>
+    <div class="yoy-grid">
+      ${yoyCard('cz', 'ČESKO', cz, years)}
+      ${yoyCard('sk', 'SLOVENSKO', sk, years)}
+    </div>`;
+}
+
+function yoyCard(cls, label, stats, years) {
+  const rows = [];
+  if (stats.towing) rows.push(yoyBenefitRows('Towing / Recovery', stats.towing, 'rd'));
+  if (stats.tech) rows.push(yoyBenefitRows('Technician attendance', stats.tech, 'rd'));
+  if (stats.replacement) rows.push(yoyBenefitRows('Replacement vehicle', stats.replacement, 'days'));
+  return `
+    <div class="yoy-card ${cls}">
+      <p class="country-label">${label}</p>
+      <table class="yoy-table">
+        <thead>
+          <tr>
+            <th>Ukazatel</th>
+            <th class="right">${years[0]}</th>
+            <th class="right">${years[1]}</th>
+            <th class="right">Δ</th>
+          </tr>
+        </thead>
+        <tbody>${rows.join('')}</tbody>
+      </table>
+    </div>`;
+}
+
+function yoyBenefitRows(title, st, metricKey) {
+  const metricLabel = metricKey === 'rd' ? 'Ø Route Distance' : 'Ø Dní zápůjčky';
+  const metricFmt = (v) => metricKey === 'rd' ? `${dec(v, 1)} km` : `${dec(v, 2)} dne`;
+  return `
+    <tr class="divider"><td colspan="4">${title}</td></tr>
+    <tr>
+      <td>Případů</td>
+      <td class="right">${fmt(st.y1.n)}</td>
+      <td class="right">${fmt(st.y2.n)}</td>
+      <td class="right">${fmtDelta(deltaPct(st.y1.n, st.y2.n))}</td>
+    </tr>
+    <tr>
+      <td>Náklady celkem</td>
+      <td class="right">${fmtMoneyTotal(st.y1.paidSum)}</td>
+      <td class="right">${fmtMoneyTotal(st.y2.paidSum)}</td>
+      <td class="right">${fmtDelta(deltaPct(st.y1.paidSum, st.y2.paidSum))}</td>
+    </tr>
+    <tr>
+      <td>Ø na případ</td>
+      <td class="right">${fmtMoneyAvg(st.y1.paidAvg)}</td>
+      <td class="right">${fmtMoneyAvg(st.y2.paidAvg)}</td>
+      <td class="right">${fmtDelta(deltaPct(st.y1.paidAvg, st.y2.paidAvg))}</td>
+    </tr>
+    <tr>
+      <td>${metricLabel}</td>
+      <td class="right">${st.y1.n ? metricFmt(st.y1.metricAvg) : '—'}</td>
+      <td class="right">${st.y2.n ? metricFmt(st.y2.metricAvg) : '—'}</td>
+      <td class="right">${fmtDelta(deltaPct(st.y1.metricAvg, st.y2.metricAvg))}</td>
+    </tr>`;
+}
+
+function formatYoYPeriod(commonMonths, years) {
+  if (commonMonths.length === 1) {
+    const mIdx = parseInt(commonMonths[0], 10) - 1;
+    return `${CZ_MONTHS[mIdx]} ${years[0]} vs ${CZ_MONTHS[mIdx]} ${years[1]}`;
+  }
+  const first = parseInt(commonMonths[0], 10) - 1;
+  const last = parseInt(commonMonths[commonMonths.length - 1], 10) - 1;
+  return `${CZ_MONTHS[first]}–${CZ_MONTHS[last]} (${years[0]} vs ${years[1]})`;
+}
+
+function deltaPct(oldV, newV) {
+  if (oldV == null || oldV === 0) return null;
+  return ((newV - oldV) / oldV) * 100;
+}
+
+function fmtDelta(pct) {
+  if (pct == null || isNaN(pct)) return '<span class="delta na">—</span>';
+  if (Math.abs(pct) < 0.05) return '<span class="delta zero">±0 %</span>';
+  const sign = pct > 0 ? '+' : '';
+  const cls = pct > 0 ? 'pos' : 'neg';
+  const arrow = pct > 0 ? '▲' : '▼';
+  return `<span class="delta ${cls}">${arrow} ${sign}${dec(pct, 1)} %</span>`;
+}
+
+// ---------- Export ----------
+function dateStamp() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
+}
+function triggerDownload(href, filename) {
+  const a = document.createElement('a');
+  a.href = href; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function showToast(msg) {
+  let t = document.querySelector('.export-toast');
+  if (!t) { t = document.createElement('div'); t.className = 'export-toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 2400);
+}
+
+const exportBtn = () => $('#btn-export');
+const exportMenu = () => $('#export-menu');
+document.addEventListener('click', (e) => {
+  if (!exportBtn() || !exportMenu()) return;
+  if (exportBtn().contains(e.target)) {
+    exportMenu().hidden = !exportMenu().hidden;
+    return;
+  }
+  const item = e.target.closest('[data-export]');
+  if (item && exportMenu().contains(item)) {
+    exportMenu().hidden = true;
+    handleExport(item.dataset.export);
+    return;
+  }
+  if (exportMenu() && !exportMenu().hidden) exportMenu().hidden = true;
+});
+
+function handleExport(kind) {
+  try {
+    if (kind === 'data-xlsx') exportFilteredDataXlsx();
+    else if (kind === 'pretty-xlsx') exportPrettyXlsx();
+    else if (kind === 'report-xlsx') exportReportXlsx();
+    else if (kind === 'charts-zip') exportChartsZip();
+    else if (kind === 'print') window.print();
+  } catch (err) {
+    console.error(err);
+    alert('Export selhal: ' + err.message);
+  }
+}
+
+function exportFilteredDataXlsx() {
+  const filtered = getFilteredData();
+  if (!filtered.length) { alert('Žádná data k exportu (po aplikaci filtrů).'); return; }
+  showToast(`Exportuji ${fmt(filtered.length)} řádků…`);
+  setTimeout(() => {
+    const ws = XLSX.utils.json_to_sheet(filtered);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Filtrovaná data');
+    XLSX.writeFile(wb, `NTW_RSA_data_${dateStamp()}.xlsx`);
+  }, 30);
+}
+
+function exportReportXlsx() {
+  const filtered = getFilteredData();
+  showToast('Sestavuji report…');
+  setTimeout(() => {
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(buildSummarySheet(filtered)), 'Souhrn');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(buildCompaniesSheet(filtered)), 'Firmy');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(buildMonthlySheet(filtered)), 'Měsíce');
+    const yoy = computeYoY();
+    if (yoy) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(buildYoYSheet(yoy)), 'YoY');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(buildFilterSheet(filtered)), 'Filtry');
+    XLSX.writeFile(wb, `NTW_RSA_report_${dateStamp()}.xlsx`);
+  }, 30);
+}
+
+function buildSummarySheet(filtered) {
+  const compute = (country) => ({
+    towing: computeStats(filtered, country, BENEFITS.towing, COL.rd),
+    tech: computeStats(filtered, country, BENEFITS.tech, COL.rd),
+    combined: computeStats(filtered, country, BENEFITS.combined, COL.rd),
+    replacement: computeStats(filtered, country, BENEFITS.replacement, COL.days)
+  });
+  const cz = compute('CZ'), sk = compute('SK');
+  const out = [
+    ['NTW RSA — Souhrnný přehled CZ × SK'],
+    ['Vygenerováno', new Date().toLocaleString('cs-CZ')],
+    ['Zdroj nákladů', COST_SOURCES[activeCostKey].label],
+    [],
+    ['Země', 'Benefit', 'Případů', 'Náklady celkem (Kč)', 'Ø na případ (Kč)', 'S vyplněnou částkou', 'Hlavní metrika']
+  ];
+  const addRow = (country, name, st, metricKey) => {
+    let metric = '';
+    if (st.n > 0) {
+      metric = metricKey === 'rd'
+        ? Math.round(st.metricAvg * 10) / 10 + ' km'
+        : Math.round(st.metricAvg * 100) / 100 + ' dní';
+    }
+    out.push([country, name, st.n, Math.round(st.paidSum), Math.round(st.paidAvg), st.paidN, metric]);
+  };
+  for (const [country, stats] of [['CZ', cz], ['SK', sk]]) {
+    addRow(country, 'Towing/Recovery', stats.towing, 'rd');
+    addRow(country, 'Technician attendance', stats.tech, 'rd');
+    addRow(country, 'Towing + Technician', stats.combined, 'rd');
+    addRow(country, 'Replacement vehicle', stats.replacement, 'days');
+  }
+  return out;
+}
+
+function buildCompaniesSheet(filtered) {
+  const list = computeCompanies(filtered).sort((a, b) => b.cases - a.cases);
+  return list.map(c => ({
+    'Firma': c.name,
+    'Země': c.country,
+    'Případů': c.cases,
+    'Towing': c.towingN,
+    'Technician': c.techN,
+    'Replacement': c.replN,
+    'Náklady celkem (Kč)': Math.round(c.paidSum),
+    'Ø na případ (Kč)': Math.round(c.paidAvg),
+    'Ø Route Distance (km)': c.rdN ? Math.round(c.rdAvg * 10) / 10 : '',
+    'Ø dní zápůjčky': c.daysN ? Math.round(c.daysAvg * 100) / 100 : ''
+  }));
+}
+
+function buildMonthlySheet(filtered) {
+  const vm = visibleMonths();
+  const mo = computeMonthly(filtered, vm);
+  const mm = computeMonthlyMetrics(filtered, vm);
+  const r1f = (v) => v == null ? '' : Math.round(v * 10) / 10;
+  const r2f = (v) => v == null ? '' : Math.round(v * 100) / 100;
+  const rInt = (v) => v == null ? '' : Math.round(v);
+  return mo.map((row, i) => ({
+    'Měsíc (YYYYMM)': row.month,
+    'CZ případů': row.cz,
+    'SK případů': row.sk,
+    'CZ Ø náklad Towing+Tech (Kč)': rInt(mm.rescueCost.cz[i]),
+    'SK Ø náklad Towing+Tech (Kč)': rInt(mm.rescueCost.sk[i]),
+    'CZ Ø km Towing+Tech': r1f(mm.rescueKm.cz[i]),
+    'SK Ø km Towing+Tech': r1f(mm.rescueKm.sk[i]),
+    'CZ Ø náklad Replacement (Kč)': rInt(mm.replCost.cz[i]),
+    'SK Ø náklad Replacement (Kč)': rInt(mm.replCost.sk[i]),
+    'CZ Ø dní Replacement': r2f(mm.replDays.cz[i]),
+    'SK Ø dní Replacement': r2f(mm.replDays.sk[i])
+  }));
+}
+
+function buildYoYSheet(yoy) {
+  const { years, commonMonths, cz, sk } = yoy;
+  const out = [
+    ['Year-to-year porovnání'],
+    ['Srovnatelné období', formatYoYPeriod(commonMonths, years)],
+    [],
+    ['Země', 'Benefit', 'Ukazatel', years[0], years[1], 'Δ %']
+  ];
+  const pctFmt = (p) => (p == null || isNaN(p)) ? '' : Math.round(p * 10) / 10;
+  const addBenefit = (country, name, st, metricKey) => {
+    out.push([country, name, 'Případů', st.y1.n, st.y2.n, pctFmt(deltaPct(st.y1.n, st.y2.n))]);
+    out.push([country, name, 'Náklady celkem (Kč)', Math.round(st.y1.paidSum), Math.round(st.y2.paidSum), pctFmt(deltaPct(st.y1.paidSum, st.y2.paidSum))]);
+    out.push([country, name, 'Ø na případ (Kč)', Math.round(st.y1.paidAvg), Math.round(st.y2.paidAvg), pctFmt(deltaPct(st.y1.paidAvg, st.y2.paidAvg))]);
+    const v1 = metricKey === 'rd' ? Math.round(st.y1.metricAvg * 10) / 10 : Math.round(st.y1.metricAvg * 100) / 100;
+    const v2 = metricKey === 'rd' ? Math.round(st.y2.metricAvg * 10) / 10 : Math.round(st.y2.metricAvg * 100) / 100;
+    out.push([country, name, metricKey === 'rd' ? 'Ø Route Distance (km)' : 'Ø dní zápůjčky', v1, v2, pctFmt(deltaPct(st.y1.metricAvg, st.y2.metricAvg))]);
+  };
+  for (const [country, stats] of [['CZ', cz], ['SK', sk]]) {
+    if (stats.towing) addBenefit(country, 'Towing/Recovery', stats.towing, 'rd');
+    if (stats.tech) addBenefit(country, 'Technician attendance', stats.tech, 'rd');
+    if (stats.replacement) addBenefit(country, 'Replacement vehicle', stats.replacement, 'days');
+  }
+  return out;
+}
+
+function buildFilterSheet(filtered) {
+  const setOrAll = (set, full, label) => set.size === full.length ? `Vše (${label})` : [...set].join(' | ');
+  return [
+    ['Audit filtrů (snapshot exportu)'],
+    ['Vygenerováno', new Date().toLocaleString('cs-CZ')],
+    [],
+    ['Zdroj nákladů', COST_SOURCES[activeCostKey].label],
+    ['Vehicle Type', setOrAll(selectedVT, vehicleTypes, 'všechny typy')],
+    ['Benefit', setOrAll(selectedBE, benefitsList, 'všechny benefity')],
+    ['Status', setOrAll(selectedST, statuses, 'všechny statusy')],
+    ['Období', setOrAll(selectedMO, months, 'všechny měsíce')],
+    [],
+    ['Počet domácích případů celkem', data.length],
+    ['Počet po filtru', filtered.length],
+    ['Duplicitních ID', duplicateIds.length]
+  ];
+}
+
+async function exportChartsZip() {
+  if (typeof JSZip === 'undefined') { alert('Knihovna JSZip se nepodařilo načíst. Zkontrolujte připojení.'); return; }
+  showToast('Sestavuji ZIP s grafy…');
+  const zip = new JSZip();
+  const list = [
+    { id: 'rd', name: 'srovnani_route_distance' },
+    { id: 'cost', name: 'srovnani_naklady' },
+    { id: 'monthly', name: 'pripady_mesicne' },
+    { id: 'trendCostRescue', name: 'trend_naklad_towing_tech' },
+    { id: 'trendKm', name: 'trend_km_towing_tech' },
+    { id: 'trendCostRepl', name: 'trend_naklad_replacement' },
+    { id: 'trendDays', name: 'trend_dni_replacement' }
+  ];
+  for (const c of list) {
+    if (!charts[c.id]) continue;
+    const dataUrl = chartToWhitePng(charts[c.id]);
+    const base64 = dataUrl.split(',')[1];
+    zip.file(`${c.name}.png`, base64, { base64: true });
+  }
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const url = URL.createObjectURL(blob);
+  triggerDownload(url, `NTW_RSA_grafy_${dateStamp()}.zip`);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function chartToWhitePng(chart) {
+  const c = chart.canvas;
+  const tmp = document.createElement('canvas');
+  tmp.width = c.width; tmp.height = c.height;
+  const ctx = tmp.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, tmp.width, tmp.height);
+  ctx.drawImage(c, 0, 0);
+  return tmp.toDataURL('image/png');
+}
+
+// ---------- Pretty XLSX (ExcelJS) ----------
+async function exportPrettyXlsx() {
+  if (typeof ExcelJS === 'undefined') {
+    alert('Knihovna ExcelJS se nepodařilo načíst. Zkontrolujte připojení.');
+    return;
+  }
+  showToast('Sestavuji vizuální report…');
+
+  const filtered = getFilteredData();
+  const visMonths = visibleMonths();
+  const hasTowing = selectedBE.has('Towing/Recovery');
+  const hasTech = selectedBE.has('Technician attendance');
+  const hasCombined = hasTowing && hasTech;
+  const hasReplacement = selectedBE.has('Replacement vehicle');
+  const hasRescue = hasTowing || hasTech;
+  const flags = { hasTowing, hasTech, hasCombined, hasReplacement, hasRescue };
+
+  const mkStats = (country) => ({
+    towing: hasTowing ? computeStats(filtered, country, BENEFITS.towing, COL.rd) : null,
+    tech: hasTech ? computeStats(filtered, country, BENEFITS.tech, COL.rd) : null,
+    combined: hasCombined ? computeStats(filtered, country, BENEFITS.combined, COL.rd) : null,
+    replacement: hasReplacement ? computeStats(filtered, country, BENEFITS.replacement, COL.days) : null
+  });
+  const cz = mkStats('CZ'), sk = mkStats('SK');
+  const monthly = computeMonthly(filtered, visMonths);
+  const monthlyMetrics = computeMonthlyMetrics(filtered, visMonths);
+  const companies = computeCompanies(filtered).sort((a, b) => b.cases - a.cases);
+  const yoy = computeYoY();
+
+  const imgs = {};
+  for (const k of ['rd','cost','monthly','trendCostRescue','trendKm','trendCostRepl','trendDays']) {
+    if (charts[k]) imgs[k] = chartToWhitePng(charts[k]);
+  }
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'NTW RSA Dashboard';
+  wb.created = new Date();
+
+  // Style palette
+  const PAL = {
+    blue: 'FF185FA5', blueDark: 'FF0C447C', blueLight: 'FFE6F1FB',
+    amber: 'FF854F0B', amberDark: 'FF633806', amberLight: 'FFFAEEDA',
+    text: 'FF1A1A18', mid: 'FF5F5E5A', subtle: 'FF888780',
+    rowAlt: 'FFF8F7F2', border: 'FFE5E5E0', white: 'FFFFFFFF',
+    green: 'FF0F6E56', greenLight: 'FFE1F5EE',
+    red: 'FF791F1F', redLight: 'FFFCEBEB'
+  };
+  const F = (color, bold, size, italic) => ({ name: 'Calibri', size: size || 11, bold: !!bold, italic: !!italic, color: { argb: color || PAL.text } });
+  const fill = (argb) => ({ type: 'pattern', pattern: 'solid', fgColor: { argb } });
+  const thinBorder = { style: 'thin', color: { argb: PAL.border } };
+  const allBorders = { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder };
+
+  const NF = {
+    int: '#,##0', dec1: '#,##0.0', dec2: '#,##0.00',
+    money: '#,##0 "Kč"', km: '#,##0.0 " km"', days: '#,##0.00 " dne"',
+    pct: '+#,##0.0"%";-#,##0.0"%";"±0%"'
+  };
+
+  function styleHeaderRow(row) {
+    row.height = 22;
+    row.eachCell((cell) => {
+      cell.font = F(PAL.white, true);
+      cell.fill = fill(PAL.blue);
+      cell.alignment = { vertical: 'middle', horizontal: cell.alignment?.horizontal || 'left', indent: 1 };
+      cell.border = { bottom: { style: 'medium', color: { argb: PAL.blueDark } } };
+    });
+  }
+  function styleDataRow(row, isAlt) {
+    row.height = 20;
+    row.eachCell((cell) => {
+      if (isAlt) cell.fill = fill(PAL.rowAlt);
+      cell.alignment = { vertical: 'middle', horizontal: cell.alignment?.horizontal || 'left', indent: 1 };
+      cell.border = { bottom: { style: 'hair', color: { argb: PAL.border } } };
+      if (!cell.font) cell.font = F();
+    });
+  }
+
+  function filterSummary() {
+    const fmtSet = (set, full, label) => set.size === full.length ? `Vše` : `${set.size}/${full.length}`;
+    return [
+      `Vehicle Type: ${fmtSet(selectedVT, vehicleTypes)}`,
+      `Benefit: ${fmtSet(selectedBE, benefitsList)}`,
+      `Status: ${fmtSet(selectedST, statuses)}${selectedST.has('Cancelled') ? '' : ' (bez Cancelled)'}`,
+      `Období: ${fmtSet(selectedMO, months)} (${visMonths.length ? formatMonthLabel(visMonths[0]) + ' – ' + formatMonthLabel(visMonths[visMonths.length-1]) : '—'})`
+    ].join(' · ');
+  }
+
+  // ===== Sheet 1: Souhrn =====
+  const s1 = wb.addWorksheet('Souhrn', { views: [{ showGridLines: false }] });
+  s1.columns = [
+    { width: 18 }, { width: 28 }, { width: 14 }, { width: 18 }, { width: 18 }, { width: 18 }, { width: 18 }
+  ];
+  s1.mergeCells('A1:G1');
+  Object.assign(s1.getCell('A1'), { value: 'NTW RSA — Přehled benefitů CZ × SK', font: F(PAL.blue, true, 22) });
+  s1.getRow(1).height = 36;
+  s1.mergeCells('A2:G2');
+  Object.assign(s1.getCell('A2'), { value: `Vygenerováno: ${new Date().toLocaleString('cs-CZ')} · Zdroj nákladů: ${COST_SOURCES[activeCostKey].label}`, font: F(PAL.subtle, false, 10, true) });
+  s1.mergeCells('A3:G3');
+  Object.assign(s1.getCell('A3'), { value: filterSummary(), font: F(PAL.mid, false, 10), alignment: { wrapText: true, vertical: 'middle' } });
+  s1.getRow(3).height = 28;
+
+  // Hero cards
+  const czTotal = (cz.towing?.n || 0) + (cz.tech?.n || 0) + (cz.replacement?.n || 0);
+  const skTotal = (sk.towing?.n || 0) + (sk.tech?.n || 0) + (sk.replacement?.n || 0);
+  s1.mergeCells('A5:C5');
+  Object.assign(s1.getCell('A5'), { value: 'ČESKO  (CZ → CZ)', font: F(PAL.blue, true, 11), fill: fill(PAL.blueLight), alignment: { vertical: 'middle', indent: 1 } });
+  s1.mergeCells('A6:C7');
+  Object.assign(s1.getCell('A6'), { value: czTotal, font: F(PAL.blue, true, 28), fill: fill(PAL.blueLight), alignment: { vertical: 'middle', indent: 1 }, numFmt: NF.int });
+  s1.mergeCells('A8:C8');
+  Object.assign(s1.getCell('A8'), { value: 'případů ve vybraných hlavních benefitech', font: F(PAL.blue, false, 9), fill: fill(PAL.blueLight), alignment: { vertical: 'middle', indent: 1 } });
+  s1.mergeCells('E5:G5');
+  Object.assign(s1.getCell('E5'), { value: 'SLOVENSKO  (SK → SK)', font: F(PAL.amber, true, 11), fill: fill(PAL.amberLight), alignment: { vertical: 'middle', indent: 1 } });
+  s1.mergeCells('E6:G7');
+  Object.assign(s1.getCell('E6'), { value: skTotal, font: F(PAL.amber, true, 28), fill: fill(PAL.amberLight), alignment: { vertical: 'middle', indent: 1 }, numFmt: NF.int });
+  s1.mergeCells('E8:G8');
+  Object.assign(s1.getCell('E8'), { value: 'případů ve vybraných hlavních benefitech', font: F(PAL.amber, false, 9), fill: fill(PAL.amberLight), alignment: { vertical: 'middle', indent: 1 } });
+  for (let r = 5; r <= 8; r++) {
+    for (const col of ['A','B','C','E','F','G']) s1.getCell(col + r).border = { top: thinBorder, bottom: thinBorder };
+  }
+
+  // Benefit table
+  let row = 10;
+  s1.mergeCells(`A${row}:G${row}`);
+  Object.assign(s1.getCell(`A${row}`), { value: 'Souhrn po benefitech', font: F(PAL.text, true, 14) });
+  s1.getRow(row).height = 24;
+  row++;
+  const hdrRow = s1.getRow(row);
+  hdrRow.values = ['Země', 'Benefit', 'Případů', 'Náklady (Kč)', 'Ø na případ (Kč)', 'S vyplněnou částkou', 'Hlavní metrika'];
+  hdrRow.getCell(3).alignment = { horizontal: 'right' };
+  hdrRow.getCell(4).alignment = { horizontal: 'right' };
+  hdrRow.getCell(5).alignment = { horizontal: 'right' };
+  hdrRow.getCell(6).alignment = { horizontal: 'right' };
+  hdrRow.getCell(7).alignment = { horizontal: 'right' };
+  styleHeaderRow(hdrRow);
+  row++;
+
+  const benefitRows = [];
+  const addBenefit = (country, name, st, metricKey) => {
+    if (!st) return;
+    benefitRows.push({ country, name, st, metricKey });
+  };
+  for (const [country, stats] of [['CZ', cz], ['SK', sk]]) {
+    addBenefit(country, 'Towing/Recovery', stats.towing, 'rd');
+    addBenefit(country, 'Technician attendance', stats.tech, 'rd');
+    addBenefit(country, 'Towing + Technician', stats.combined, 'rd');
+    addBenefit(country, 'Replacement vehicle', stats.replacement, 'days');
+  }
+  benefitRows.forEach((b, i) => {
+    const r = s1.getRow(row);
+    r.values = [b.country, b.name, b.st.n, Math.round(b.st.paidSum), Math.round(b.st.paidAvg), b.st.paidN, b.metricKey === 'rd' ? b.st.metricAvg : b.st.metricAvg];
+    r.getCell(1).font = F(b.country === 'CZ' ? PAL.blueDark : PAL.amberDark, true);
+    r.getCell(1).fill = fill(b.country === 'CZ' ? PAL.blueLight : PAL.amberLight);
+    r.getCell(1).alignment = { horizontal: 'center' };
+    r.getCell(3).numFmt = NF.int; r.getCell(3).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(4).numFmt = NF.money; r.getCell(4).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(5).numFmt = NF.money; r.getCell(5).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(6).numFmt = NF.int; r.getCell(6).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(7).numFmt = b.metricKey === 'rd' ? NF.km : NF.days; r.getCell(7).alignment = { horizontal: 'right', indent: 1 };
+    styleDataRow(r, i % 2 === 1);
+    row++;
+  });
+  row++;
+
+  // Comparison charts
+  if (imgs.rd || imgs.cost) {
+    s1.mergeCells(`A${row}:G${row}`);
+    Object.assign(s1.getCell(`A${row}`), { value: 'Srovnávací grafy', font: F(PAL.text, true, 14) });
+    s1.getRow(row).height = 24;
+    row += 2;
+    if (imgs.rd) {
+      const id = wb.addImage({ base64: imgs.rd, extension: 'png' });
+      s1.addImage(id, { tl: { col: 0, row: row - 1 }, ext: { width: 560, height: 220 } });
+      row += 13;
+    }
+    if (imgs.cost) {
+      const id = wb.addImage({ base64: imgs.cost, extension: 'png' });
+      s1.addImage(id, { tl: { col: 0, row: row - 1 }, ext: { width: 560, height: 220 } });
+      row += 13;
+    }
+  }
+  s1.views = [{ state: 'frozen', ySplit: 4, showGridLines: false }];
+
+  // ===== Sheet 2: Měsíční vývoj =====
+  const s2 = wb.addWorksheet('Měsíční vývoj', { views: [{ showGridLines: false }] });
+  s2.columns = [
+    { width: 12 }, { width: 12 }, { width: 12 }, { width: 18 }, { width: 18 },
+    { width: 16 }, { width: 16 }, { width: 18 }, { width: 18 }, { width: 16 }, { width: 16 }
+  ];
+  s2.mergeCells('A1:K1');
+  Object.assign(s2.getCell('A1'), { value: 'Měsíční vývoj případů a metrik', font: F(PAL.blue, true, 20) });
+  s2.getRow(1).height = 32;
+  s2.mergeCells('A2:K2');
+  Object.assign(s2.getCell('A2'), { value: `Období: ${visMonths.length ? formatMonthLabel(visMonths[0]) + ' – ' + formatMonthLabel(visMonths[visMonths.length-1]) + ` (${visMonths.length} měsíců)` : '—'}`, font: F(PAL.subtle, false, 10, true) });
+
+  let r2 = 4;
+  const hdr2 = s2.getRow(r2);
+  hdr2.values = ['Měsíc', 'CZ případů', 'SK případů', 'CZ Ø nákl. T+T', 'SK Ø nákl. T+T', 'CZ Ø km T+T', 'SK Ø km T+T', 'CZ Ø nákl. Repl.', 'SK Ø nákl. Repl.', 'CZ Ø dní Repl.', 'SK Ø dní Repl.'];
+  for (let c = 2; c <= 11; c++) hdr2.getCell(c).alignment = { horizontal: 'right' };
+  styleHeaderRow(hdr2);
+  r2++;
+  monthly.forEach((m, i) => {
+    const r = s2.getRow(r2);
+    const idx = monthlyMetrics.months.indexOf(m.month);
+    const rc = idx >= 0 ? monthlyMetrics.rescueCost : null;
+    const rk = idx >= 0 ? monthlyMetrics.rescueKm : null;
+    const pc = idx >= 0 ? monthlyMetrics.replCost : null;
+    const pd = idx >= 0 ? monthlyMetrics.replDays : null;
+    r.values = [
+      formatMonthLabel(m.month), m.cz, m.sk,
+      idx >= 0 && rc.cz[idx] != null ? Math.round(rc.cz[idx]) : '',
+      idx >= 0 && rc.sk[idx] != null ? Math.round(rc.sk[idx]) : '',
+      idx >= 0 && rk.cz[idx] != null ? Math.round(rk.cz[idx]*10)/10 : '',
+      idx >= 0 && rk.sk[idx] != null ? Math.round(rk.sk[idx]*10)/10 : '',
+      idx >= 0 && pc.cz[idx] != null ? Math.round(pc.cz[idx]) : '',
+      idx >= 0 && pc.sk[idx] != null ? Math.round(pc.sk[idx]) : '',
+      idx >= 0 && pd.cz[idx] != null ? Math.round(pd.cz[idx]*100)/100 : '',
+      idx >= 0 && pd.sk[idx] != null ? Math.round(pd.sk[idx]*100)/100 : ''
+    ];
+    r.getCell(1).font = F(PAL.text, true);
+    for (let c = 2; c <= 3; c++) { r.getCell(c).numFmt = NF.int; r.getCell(c).alignment = { horizontal: 'right', indent: 1 }; }
+    for (let c = 4; c <= 5; c++) { r.getCell(c).numFmt = NF.money; r.getCell(c).alignment = { horizontal: 'right', indent: 1 }; }
+    for (let c = 6; c <= 7; c++) { r.getCell(c).numFmt = NF.km; r.getCell(c).alignment = { horizontal: 'right', indent: 1 }; }
+    for (let c = 8; c <= 9; c++) { r.getCell(c).numFmt = NF.money; r.getCell(c).alignment = { horizontal: 'right', indent: 1 }; }
+    for (let c = 10; c <= 11; c++) { r.getCell(c).numFmt = NF.days; r.getCell(c).alignment = { horizontal: 'right', indent: 1 }; }
+    styleDataRow(r, i % 2 === 1);
+    r2++;
+  });
+  r2 += 2;
+
+  // Charts
+  if (imgs.monthly) {
+    s2.mergeCells(`A${r2}:K${r2}`);
+    Object.assign(s2.getCell(`A${r2}`), { value: 'Počet případů po měsících', font: F(PAL.text, true, 13) });
+    s2.getRow(r2).height = 22;
+    r2 += 2;
+    const id = wb.addImage({ base64: imgs.monthly, extension: 'png' });
+    s2.addImage(id, { tl: { col: 0, row: r2 - 1 }, ext: { width: 900, height: 280 } });
+    r2 += 16;
+  }
+  const trendImgs = [
+    { key: 'trendCostRescue', title: 'Ø náklad / případ — Towing + Technician' },
+    { key: 'trendKm', title: 'Ø Route Distance — Towing + Technician' },
+    { key: 'trendCostRepl', title: 'Ø náklad / případ — Replacement vehicle' },
+    { key: 'trendDays', title: 'Ø dní zápůjčky — Replacement vehicle' }
+  ].filter(x => imgs[x.key]);
+  if (trendImgs.length) {
+    s2.mergeCells(`A${r2}:K${r2}`);
+    Object.assign(s2.getCell(`A${r2}`), { value: 'Vývoj klíčových ukazatelů v čase', font: F(PAL.text, true, 13) });
+    s2.getRow(r2).height = 22;
+    r2 += 2;
+    for (let i = 0; i < trendImgs.length; i++) {
+      const t = trendImgs[i];
+      s2.mergeCells(`A${r2}:K${r2}`);
+      Object.assign(s2.getCell(`A${r2}`), { value: t.title, font: F(PAL.mid, false, 11, true) });
+      r2++;
+      const id = wb.addImage({ base64: imgs[t.key], extension: 'png' });
+      s2.addImage(id, { tl: { col: 0, row: r2 - 1 }, ext: { width: 760, height: 240 } });
+      r2 += 14;
+    }
+  }
+  s2.views = [{ state: 'frozen', ySplit: 4, xSplit: 1, showGridLines: false }];
+
+  // ===== Sheet 3: Firmy =====
+  const s3 = wb.addWorksheet('Firmy', { views: [{ showGridLines: false }] });
+  s3.columns = [
+    { width: 38 }, { width: 8 }, { width: 12 }, { width: 10 }, { width: 10 }, { width: 10 },
+    { width: 16 }, { width: 16 }, { width: 16 }, { width: 14 }
+  ];
+  s3.mergeCells('A1:J1');
+  Object.assign(s3.getCell('A1'), { value: 'Přehled po firmách', font: F(PAL.blue, true, 20) });
+  s3.getRow(1).height = 32;
+  s3.mergeCells('A2:J2');
+  Object.assign(s3.getCell('A2'), { value: `${companies.length} firem · seřazeno podle počtu případů sestupně`, font: F(PAL.subtle, false, 10, true) });
+
+  let r3 = 4;
+  const hdr3 = s3.getRow(r3);
+  hdr3.values = ['Firma', 'Země', 'Případů', 'Towing', 'Technician', 'Replacement', 'Náklady celkem (Kč)', 'Ø na případ (Kč)', 'Ø Route Distance', 'Ø dní zápůjčky'];
+  for (let c = 3; c <= 10; c++) hdr3.getCell(c).alignment = { horizontal: 'right' };
+  hdr3.getCell(2).alignment = { horizontal: 'center' };
+  styleHeaderRow(hdr3);
+  r3++;
+  companies.forEach((c, i) => {
+    const r = s3.getRow(r3);
+    r.values = [c.name, c.country, c.cases, c.towingN, c.techN, c.replN,
+                Math.round(c.paidSum), Math.round(c.paidAvg),
+                c.rdN ? Math.round(c.rdAvg*10)/10 : '', c.daysN ? Math.round(c.daysAvg*100)/100 : ''];
+    r.getCell(1).font = F(PAL.text, true);
+    r.getCell(2).font = F(c.country === 'CZ' ? PAL.blueDark : PAL.amberDark, true);
+    r.getCell(2).fill = fill(c.country === 'CZ' ? PAL.blueLight : PAL.amberLight);
+    r.getCell(2).alignment = { horizontal: 'center' };
+    for (let cc = 3; cc <= 6; cc++) { r.getCell(cc).numFmt = NF.int; r.getCell(cc).alignment = { horizontal: 'right', indent: 1 }; }
+    r.getCell(7).numFmt = NF.money; r.getCell(7).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(8).numFmt = NF.money; r.getCell(8).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(9).numFmt = NF.km; r.getCell(9).alignment = { horizontal: 'right', indent: 1 };
+    r.getCell(10).numFmt = NF.days; r.getCell(10).alignment = { horizontal: 'right', indent: 1 };
+    styleDataRow(r, i % 2 === 1);
+    r3++;
+  });
+  s3.autoFilter = { from: { row: 4, column: 1 }, to: { row: r3 - 1, column: 10 } };
+  s3.views = [{ state: 'frozen', ySplit: 4, xSplit: 1, showGridLines: false }];
+
+  // ===== Sheet 4: YoY (if exists) =====
+  if (yoy) {
+    const s4 = wb.addWorksheet('YoY', { views: [{ showGridLines: false }] });
+    s4.columns = [{ width: 12 }, { width: 26 }, { width: 22 }, { width: 16 }, { width: 16 }, { width: 14 }];
+    s4.mergeCells('A1:F1');
+    Object.assign(s4.getCell('A1'), { value: `Year-to-year porovnání ${yoy.years[0]} → ${yoy.years[1]}`, font: F(PAL.blue, true, 20) });
+    s4.getRow(1).height = 32;
+    s4.mergeCells('A2:F2');
+    Object.assign(s4.getCell('A2'), { value: `Srovnatelné období: ${formatYoYPeriod(yoy.commonMonths, yoy.years)} · respektuje filtry Vehicle Type, Benefit a Status`, font: F(PAL.subtle, false, 10, true) });
+
+    let r4 = 4;
+    const hdr4 = s4.getRow(r4);
+    hdr4.values = ['Země', 'Benefit', 'Ukazatel', yoy.years[0], yoy.years[1], 'Δ %'];
+    hdr4.getCell(4).alignment = { horizontal: 'right' };
+    hdr4.getCell(5).alignment = { horizontal: 'right' };
+    hdr4.getCell(6).alignment = { horizontal: 'right' };
+    styleHeaderRow(hdr4);
+    r4++;
+    let altIx = 0;
+    for (const [country, stats] of [['CZ', yoy.cz], ['SK', yoy.sk]]) {
+      const addRow = (name, label, v1, v2, fmt) => {
+        const r = s4.getRow(r4);
+        const pct = deltaPct(v1, v2);
+        r.values = [country, name, label, v1, v2, pct == null ? '' : pct / 100];
+        r.getCell(1).font = F(country === 'CZ' ? PAL.blueDark : PAL.amberDark, true);
+        r.getCell(1).fill = fill(country === 'CZ' ? PAL.blueLight : PAL.amberLight);
+        r.getCell(1).alignment = { horizontal: 'center' };
+        r.getCell(4).numFmt = fmt; r.getCell(4).alignment = { horizontal: 'right', indent: 1 };
+        r.getCell(5).numFmt = fmt; r.getCell(5).alignment = { horizontal: 'right', indent: 1 };
+        r.getCell(6).numFmt = '+0.0%;-0.0%;"±0%"';
+        r.getCell(6).alignment = { horizontal: 'right', indent: 1 };
+        if (pct != null) {
+          r.getCell(6).font = F(pct > 0 ? PAL.green : (pct < 0 ? PAL.red : PAL.mid), true);
+          r.getCell(6).fill = fill(pct > 0 ? PAL.greenLight : (pct < 0 ? PAL.redLight : PAL.rowAlt));
+        }
+        styleDataRow(r, altIx % 2 === 1);
+        altIx++;
+        r4++;
+      };
+      const addBenefit = (name, st, metricKey) => {
+        if (!st) return;
+        addRow(name, 'Případů', st.y1.n, st.y2.n, NF.int);
+        addRow(name, 'Náklady celkem', st.y1.paidSum, st.y2.paidSum, NF.money);
+        addRow(name, 'Ø na případ', st.y1.paidAvg, st.y2.paidAvg, NF.money);
+        if (metricKey === 'rd') addRow(name, 'Ø Route Distance', st.y1.metricAvg, st.y2.metricAvg, NF.km);
+        else addRow(name, 'Ø dní zápůjčky', st.y1.metricAvg, st.y2.metricAvg, NF.days);
+      };
+      addBenefit('Towing/Recovery', stats.towing, 'rd');
+      addBenefit('Technician attendance', stats.tech, 'rd');
+      addBenefit('Replacement vehicle', stats.replacement, 'days');
+    }
+    s4.views = [{ state: 'frozen', ySplit: 4, showGridLines: false }];
+  }
+
+  // ===== Sheet 5: Audit =====
+  const s5 = wb.addWorksheet('Filtry & audit', { views: [{ showGridLines: false }] });
+  s5.columns = [{ width: 24 }, { width: 80 }];
+  s5.mergeCells('A1:B1');
+  Object.assign(s5.getCell('A1'), { value: 'Filtry & audit', font: F(PAL.blue, true, 20) });
+  s5.getRow(1).height = 32;
+  let r5 = 3;
+  const setLine = (k, v) => {
+    const r = s5.getRow(r5);
+    r.values = [k, v];
+    r.getCell(1).font = F(PAL.mid, true);
+    r.getCell(1).alignment = { vertical: 'top', indent: 1 };
+    r.getCell(2).alignment = { wrapText: true, vertical: 'top', indent: 1 };
+    r.height = Math.min(120, Math.max(20, Math.ceil(String(v).length / 80) * 16));
+    r5++;
+  };
+  setLine('Vygenerováno', new Date().toLocaleString('cs-CZ'));
+  setLine('Zdroj nákladů', COST_SOURCES[activeCostKey].label);
+  setLine('Vehicle Type', selectedVT.size === vehicleTypes.length ? 'Vše' : [...selectedVT].join(', '));
+  setLine('Benefit', selectedBE.size === benefitsList.length ? 'Vše' : [...selectedBE].join(', '));
+  setLine('Status', selectedST.size === statuses.length ? 'Vše' : [...selectedST].join(', '));
+  setLine('Období', selectedMO.size === months.length ? 'Vše' : [...selectedMO].sort().join(', '));
+  r5++;
+  setLine('Počet domácích případů (před filtrem)', data.length);
+  setLine('Počet po filtru', filtered.length);
+  setLine('Duplicitních ID', duplicateIds.length);
+
+  // Write
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  triggerDownload(url, `NTW_RSA_visual_report_${dateStamp()}.xlsx`);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+// ---------- Formatters ----------
+function fmt(n) { return Math.round(n).toLocaleString('cs-CZ'); }
+function dec(n, d) { return (n || 0).toLocaleString('cs-CZ', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+function r1(n) { return Math.round((n || 0) * 10) / 10; }
+function fmtMoneyTotal(n) {
+  if (n >= 1e6) return dec(n / 1e6, 1) + ' mil. Kč';
+  if (n >= 1e4) return Math.round(n / 1e3).toLocaleString('cs-CZ') + ' tis. Kč';
+  return Math.round(n).toLocaleString('cs-CZ') + ' Kč';
+}
+function fmtMoneyAvg(n) { return Math.round(n).toLocaleString('cs-CZ') + ' Kč'; }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+</script>
+</body>
+</html>
